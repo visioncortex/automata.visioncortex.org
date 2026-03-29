@@ -5,12 +5,20 @@ sidebar_label: Control Panel
 
 # Control Panel
 
-Workflows for navigating legacy Control Panel settings not yet available in the modern Settings app.
+The classic Control Panel is a Win32 application (`control.exe`). These workflows cover settings that have not been migrated to the modern Settings app or that are more conveniently accessed here.
 
-## control_panel_mouse
+Control Panel uses a search-and-click navigation model: open the panel, type a search term in the search box, then click the result link. The `mouse_settings` workflow demonstrates this pattern and can be adapted to any Control Panel page reachable by search.
 
-## control_panel_keyboard
+## `mouse_settings`
 
-## control_panel_firewall
+Opens Control Panel, searches for a term, and clicks a result link.
 
-## control_panel_display
+| | |
+|---|---|
+| **Params** | `search` *(default: `mouse`)* — search term to type; `link` — text of the result link to click |
+
+## `firewall_settings`
+
+Opens Control Panel, searches for "firewall", and navigates to **Windows Defender Firewall**.
+
+No parameters.

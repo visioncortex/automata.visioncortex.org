@@ -51,6 +51,23 @@ expect:
 
 `{output.*}` substitution is applied to `exact`, `contains`, and `starts_with` values at evaluation time.
 
+Use `regex` when the other match modes cannot express the condition. The main reason to reach for it over a plain pattern is **backreferences** — matching the same value in two positions. A common case is detecting when a progress counter reaches completion:
+
+```yaml
+- intent: wait for processing to finish
+  action:
+    type: NoOp
+  expect:
+    type: ElementHasText
+    scope: status_bar
+    selector: ">> [role=edit][name=Progress]"
+    pattern:
+      regex: "^(\\d+) of \\1$"
+  timeout: 120s
+```
+
+`(\d+) of \1` matches text like `"123 of 123"` — where the total equals the current count — using a backreference to the first capture group. `exact` cannot be used because the numbers are not known in advance. Only the backreference can express "these two numbers must be the same."
+
 ## Window conditions
 
 | Type | Fields | True when |

@@ -62,10 +62,23 @@ An unconditional jump uses `Always`:
 
 Combining `Eval` variables, `EvalCondition`, and phase jumps gives you a full loop. The pattern is:
 
-1. An **init** phase sets the loop variable
-2. A **check** phase jumps to the exit phase when the condition is met
-3. A **body** phase does the work and increments the variable
-4. A **loop_back** phase jumps unconditionally back to check
+```
+     ┌─────────┐
+     │  init   │  set loop variable
+     └────┬────┘
+          │
+          ▼
+     ┌─────────┐   i > 10   ┌──────┐
+┌────│  check  │───────────►│ done │
+│    └────┬────┘            └──────┘
+│         │ i ≤ 10
+│         ▼
+▲    ┌───────────┐
+│    │ loop_body │ do work, increment i
+│    └────┬──────┘
+│         │
+└─────────┘
+```
 
 Here is a complete example — `notepad_loop_counter` — which counts from 1 to 10, types each number into Notepad, accumulates a running total, and writes the final sum:
 

@@ -98,7 +98,7 @@ Set `multiple: true` to extract all matching elements. The values are stored as 
     multiple: true
   expect:
     type: EvalCondition
-    expr: "output.row_labels != ''"
+    expr: "output_count('row_labels') > 0"
 ```
 
 ## Returning values as workflow outputs

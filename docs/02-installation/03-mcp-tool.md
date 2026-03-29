@@ -51,6 +51,13 @@ Claude Desktop uses stdio instead of HTTP. Add the following to your `claude_des
 
 Claude Desktop launches `automata-agent` automatically — you do not need to start it manually. When it starts in stdio mode it also prints the equivalent HTTP config to the terminal, in case you want to switch modes later.
 
+:::caution After editing the config
+
+Claude Desktop must be **fully quit** before it will pick up the new config. Closing the window is not enough — Claude minimises to the taskbar. Right-click the Claude icon in the system tray and choose **Quit**, then relaunch it.
+
+:::
+
+
 ## Which model to use
 
 **Sonnet 4.6** is fast enough for interactive use: exploring a UI, running one-off actions, checking workflow status.
