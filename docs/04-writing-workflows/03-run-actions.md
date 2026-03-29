@@ -408,8 +408,6 @@ Pauses for a fixed duration before the `expect` condition is evaluated. Use spar
     selector: ">> [role=tooltip]"
 ```
 
----
-
 ## `run_actions`: trying actions interactively
 
 The `run_actions` MCP tool lets an agent execute a sequence of steps against a live window without creating a workflow file. It is the fastest way to test a selector, verify an action works, or prototype a phase before committing it to YAML.
