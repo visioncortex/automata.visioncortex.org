@@ -1,0 +1,43 @@
+---
+slug: architecture-of-ui-automata
+title: "Architecture of ui-automata"
+author: Chris Tsang
+author_title: visioncortex
+author_url: https://github.com/tyt2y3
+author_image_url: https://avatars.githubusercontent.com/u/1782664?v=4
+tags: [news]
+---
+
+import { Image } from '../src/themed.js';
+
+ui-automata is not a single program — it is a system of four cooperating components that together allow an AI agent running on a Mac to control a Windows VM it has never directly touched.
+
+<!-- truncate -->
+
+## The three-machine problem
+
+## Component overview
+
+### `automata-server` — the relay
+
+### `automata-desktop` — the MCP bridge
+
+### `automata-client` — the Windows executor
+
+### `ui-automata` — the workflow engine
+
+## How a workflow runs end-to-end
+
+## The shadow DOM: why we cache the element tree
+
+## Security model
+
+### Outbound-only connections
+
+### In-memory credentials
+
+### Token lifecycle
+
+## Protocol versioning
+
+## What's next
