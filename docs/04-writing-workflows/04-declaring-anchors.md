@@ -7,9 +7,9 @@ sidebar_label: Choosing Anchors
 
 Given a real application, how do you decide where to put anchors? This is the most consequential structural decision in a workflow. The right choices make the workflow resilient; the wrong ones produce stale handles and fragile re-query chains.
 
-For the anchor mechanics — declaration syntax, lifetime tiers, mount/unmount — see [Anchors](../03-core-concepts/04-anchors).
+For the anchor mechanics — declaration syntax, lifetime tiers, mount/unmount — see [Anchors](../03-core-concepts/04-anchors.md).
 
-## Start from the app, not the tier list
+## Start from the App, Not the Tier List
 
 The instinct when learning anchors is to read the tier definitions and try to assign each element to a tier. That is backwards.
 
@@ -17,7 +17,7 @@ Start instead by observing what the application actually rebuilds during the wor
 
 **Anchor the outermost element that stays alive for the duration of the task.** Everything inside it can be addressed with selectors.
 
-## A worked example
+## A Worked Example
 
 Consider a document editor with a menu bar, an editor pane, and a Save As dialog that appears when saving.
 
@@ -62,7 +62,7 @@ phases:
 
 The editor is only mounted where it is used. The save dialog is unmounted after the save phase so its stale handle does not accumulate.
 
-## Choosing the right tier
+## Choosing the Right Tier
 
 | Situation | Tier |
 |---|---|
@@ -73,7 +73,7 @@ The editor is only mounted where it is used. The save dialog is unmounted after 
 
 When in doubt between `Root` and `Session`: if the window disappearing mid-workflow should stop the workflow, use `Root`. If the workflow should handle its absence gracefully, use `Session`.
 
-## Single root vs. multiple anchors
+## Single Root vs. Multiple Anchors
 
 Prefer fewer anchors. A single `Root` anchor covering the entire main window plus selectors for everything inside it is simpler than a hierarchy of `Stable` children — until the app rebuilds parts of its UI mid-workflow.
 
@@ -84,7 +84,7 @@ Add a `Stable` child anchor when:
 
 Do not add a `Stable` anchor just to shorten a selector by one step. The complexity cost is real.
 
-## Common mistakes
+## Common Mistakes
 
 **Anchoring too deep.** A `Stable` anchor pointing at a specific button is fragile — the button may not exist yet when the anchor is mounted. Anchor containers, not leaves. Use selectors for leaves.
 

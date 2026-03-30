@@ -7,7 +7,7 @@ sidebar_label: Shadow DOM
 
 The shadow DOM is the engine's cached mirror of the live Windows UI element tree. It is the core of what makes ui-automata fast and reliable — fast enough to react to UI transitions in well under a second, and reliable enough to stay locked to the right window even when the desktop is busy.
 
-## The problem with raw UIA
+## The Problem with Raw UIA
 
 Before we can appreciate the shadow DOM, it helps to understand what life without it looks like.
 
@@ -17,7 +17,7 @@ Traditional automation tools pay this cost on every step. Run a 20-step workflow
 
 This is not fast enough for fluid automation. It is also fragile: if the application is momentarily busy (loading data, animating a transition), the query may return incomplete results or fail outright.
 
-## How the shadow DOM solves it
+## How the Shadow DOM Solves It
 
 ui-automata resolves each anchor once, caches the live element handle, and reuses it for every subsequent step. No re-traversal. No redundant round-trips. A cached handle lookup is effectively free compared to a cross-process UIA query.
 
@@ -25,7 +25,7 @@ The result: step execution is no longer bottlenecked by element resolution. When
 
 This is the inverse of React's virtual DOM. React maintains a virtual tree to efficiently *write to* a UI it controls. The shadow DOM maintains a virtual tree to efficiently *read from* a UI it does not control.
 
-## HWND locking: staying bound to the right window
+## HWND Locking: Staying Bound to the Right Window
 
 Speed is only half the problem. The other half is identity.
 
@@ -41,7 +41,7 @@ When a Root anchor is first resolved, the engine records the exact HWND (operati
 
 A Root anchor is not "the window that currently matches this selector." It is "this specific window, forever." If that window is destroyed, the anchor fails with a fatal error rather than silently attaching to something else.
 
-## What the shadow DOM stores
+## What the Shadow DOM Stores
 
 The shadow DOM holds four things:
 
@@ -50,13 +50,13 @@ The shadow DOM holds four things:
 - **snapshots** — last-known tree snapshots per anchor, used to detect UI changes
 - **locks** — the HWND and PID captured on first resolution of each Root anchor
 
-## Lazy resolution
+## Lazy Resolution
 
 Stable anchors are not resolved at mount time. The engine resolves them on first use and caches the result. A Stable anchor pointing at a panel that has not appeared yet does not block the phase from starting — it is resolved the first time a step references it as `scope`.
 
 Root anchors are the exception: they are resolved immediately on first mount, because a missing application window is an unrecoverable error that should fail fast.
 
-## Stale handle recovery
+## Stale Handle Recovery
 
 UIs are not static. A document panel reloads when the user saves. A toolbar refreshes when mode changes. When this happens, the cached handles pointing into that subtree go stale — the elements they reference have been destroyed and recreated.
 
@@ -73,6 +73,6 @@ The behavior differs by tier:
 
 This walk-up strategy is why well-structured workflows rarely need explicit anchor re-mounting. The engine handles transient UI rebuilds automatically.
 
-## Subflow depth scoping
+## Subflow Depth Scoping
 
 When the engine enters a subflow, it increments a depth counter. Stable and Ephemeral anchors declared in the child workflow are stored under a depth-prefixed key, keeping them isolated from parent anchors of the same name. Root and Session anchors are not prefixed — they are shared across all depths, so a subflow can reference the parent's main window without re-declaring it.

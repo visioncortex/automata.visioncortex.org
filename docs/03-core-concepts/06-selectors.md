@@ -11,7 +11,7 @@ No single property is reliably enough on its own to pinpoint the exact element y
 
 The CSS-like syntax is a convenience. The point is precision.
 
-## Semantic properties, not visual ones
+## Semantic Properties, Not Visual Ones
 
 Selectors operate on Windows UI Automation properties — the accessibility layer baked into Windows. This is a critical design choice. UIA properties are stable:
 
@@ -28,7 +28,7 @@ A pixel-coordinate-based tool breaks when the window moves or the DPI changes. A
 | `title` | Alias for `name` on Window elements |
 | `id` | UIA AutomationId |
 
-## Compound predicates: AND logic
+## Compound Predicates: AND Logic
 
 A step can chain multiple predicates. All must match.
 
@@ -46,7 +46,7 @@ Button[name=Open]
 
 is equivalent to `[role=button][name=Open]`.
 
-## String operators: right-sizing the match
+## String Operators: Right-Sizing the Match
 
 Different situations call for different levels of specificity.
 
@@ -65,7 +65,7 @@ Use `=` when the name is stable and fully known. Use `~=` when the name includes
 
 Matches "Don't Save" — whether the apostrophe is `U+0027` or `U+2019` (right single quotation mark, common in newer Windows versions).
 
-## Combinators: structural context
+## Combinators: Structural Context
 
 A selector describes not just *what* an element is, but *where* it lives in the tree. This structural context is often what makes a selector unambiguous.
 
@@ -96,7 +96,7 @@ selector: ">> [role=edit][name=Filename]"
 
 Without `>>`, the selector would test the dialog element itself against `[role=edit]` — which would fail.
 
-## OR values: cross-version resilience
+## OR Values: Cross-Version Resilience
 
 The same UI element can have different role strings across Windows versions or application updates. OR values let one selector match both:
 
@@ -107,7 +107,7 @@ The same UI element can have different role strings across Windows versions or a
 
 This is precision in the other direction: instead of over-specifying and breaking on variation, you enumerate exactly the valid alternatives.
 
-## Positional modifier: `:nth`
+## Positional Modifier: `:nth`
 
 When multiple elements satisfy the same predicates, position disambiguates.
 
@@ -117,7 +117,7 @@ ToolBar > Group:nth(1)     # second Group (0-indexed) that is a direct child of 
 
 Use `:nth` when elements are structurally identical and position is the only distinguishing factor.
 
-## Tree navigation: `:parent` and `:ancestor`
+## Tree Navigation: `:parent` and `:ancestor`
 
 Sometimes the element you need to act on can only be identified through one of its children. Navigate up with `:parent` or `:ancestor(n)`.
 
@@ -139,7 +139,7 @@ You can continue the path after ascending:
 
 Finds the Performance button, moves to its parent, then selects the 10th child of that parent. This handles layouts where a row container can only be identified by a landmark element inside it.
 
-## Common patterns
+## Common Patterns
 
 **Pin by AutomationId when available — it is the most stable identifier:**
 ```yaml

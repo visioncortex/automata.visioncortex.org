@@ -1,6 +1,6 @@
 ---
-title: Connecting Claude
-sidebar_label: Connecting Claude
+title: Connecting MCP
+sidebar_label: Connecting MCP
 ---
 
 # Connecting Claude
@@ -58,7 +58,7 @@ Claude Desktop must be **fully quit** before it will pick up the new config. Clo
 :::
 
 
-## Which model to use
+## Which Model to Use
 
 **Sonnet 4.6** is fast enough for interactive use: exploring a UI, running one-off actions, checking workflow status.
 

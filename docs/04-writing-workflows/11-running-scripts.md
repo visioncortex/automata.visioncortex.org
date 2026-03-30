@@ -7,7 +7,7 @@ sidebar_label: Running Scripts
 
 The `Exec` action runs any executable on the Windows machine: Python scripts, PowerShell, batch files, or any program reachable via `PATH`. This is the bridge between the workflow engine and the broader scripting ecosystem.
 
-## Basic usage
+## Basic Usage
 
 ```yaml
 - intent: run post-processing script
@@ -26,7 +26,7 @@ The `Exec` action runs any executable on the Windows machine: Python scripts, Po
 
 Use `{workflow.dir}` to locate scripts that live alongside the workflow file. This works regardless of the directory the executor was launched from.
 
-## Passing workflow data to a script
+## Passing Workflow Data to a Script
 
 `{output.*}` and `{param.*}` tokens are substituted in both `command` and `args` before the process is spawned:
 
@@ -45,7 +45,7 @@ Use `{workflow.dir}` to locate scripts that live alongside the workflow file. Th
     type: ExecSucceeded
 ```
 
-## Capturing script output
+## Capturing Script Output
 
 Set `key` to capture the process's stdout. Each line of output is stored as a separate value under the key:
 
@@ -64,7 +64,7 @@ Set `key` to capture the process's stdout. Each line of output is stored as a se
 
 The captured value is available as `{output.result}` in subsequent steps.
 
-## Writing extracted data to a file
+## Writing Extracted Data to a File
 
 When a workflow has extracted multiple values from the UI — a list of items, a set of row labels, a tree of names — you often need to pass that data to a script. `WriteOutput` writes all values stored under a key to a file, one CSV-quoted line per value:
 
@@ -120,6 +120,6 @@ PowerShell scripts work the same way:
     type: ExecSucceeded
 ```
 
-## Combining UI automation and scripting
+## Combining UI Automation and Scripting
 
 A workflow can drive a GUI application to produce data, write it to a file, hand it to a Python script for processing, then use the script's output in subsequent UI steps. The full power of the Python ecosystem is available at any point in the workflow — data transformation, file format conversion, API calls, or anything else that is easier to express in code than in YAML.

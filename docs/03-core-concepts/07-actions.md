@@ -7,7 +7,7 @@ sidebar_label: Actions
 
 An action is what a step does. Actions range from basic UI interactions like clicking and typing, to reading values out of the UI, to running external scripts. Every action is paired with an `expect` condition that must be satisfied before the workflow continues.
 
-## Interaction actions
+## Interaction Actions
 
 ### Click
 
@@ -49,7 +49,7 @@ Do not use `ScrollIntoView` for items in WinUI / UWP scrollable lists — it use
 
 Brings a window to the foreground and gives it focus. Accepts a `scope` anchor. Use this when a workflow needs to interact with a window that may not be in the foreground.
 
-## Data actions
+## Data Actions
 
 ### Extract
 
@@ -63,11 +63,11 @@ Computes an expression and stores the result in an output variable. See [Express
 
 Writes a value directly to an output key without computing an expression. Useful for capturing a multi-line result to a file or for publishing a final value at the end of a phase.
 
-## System actions
+## System Actions
 
 ### Exec
 
-Runs an external process. `command` is resolved via `PATH`; `args` are passed as a list. If `key` is set, stdout is captured line-by-line into that output variable. See [Running External Scripts](../04-writing-workflows/10-running-scripts) for full usage.
+Runs an external process. `command` is resolved via `PATH`; `args` are passed as a list. If `key` is set, stdout is captured line-by-line into that output variable. See [Running External Scripts](../04-writing-workflows/11-running-scripts.md) for full usage.
 
 ### MoveFile
 
@@ -77,7 +77,7 @@ Moves or renames a file. Supports `{output.*}` and `{param.*}` substitution in b
 
 Writes a string to a file, creating it if it does not exist.
 
-## The NoOp action
+## The NoOp Action
 
 `NoOp` performs no action but still evaluates its `expect` condition. Use it to wait for a state to become true without doing anything:
 

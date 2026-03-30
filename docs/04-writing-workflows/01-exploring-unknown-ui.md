@@ -11,7 +11,7 @@ The same tools are exposed as MCP actions, so the AI agent and the workflow auth
 
 This is the first step of every new workflow: explore first, write selectors second.
 
-## The live inspector
+## The Live Inspector
 
 For mouse-driven interactive exploration, run `ui-inspector` from a terminal on the Windows machine:
 
@@ -41,7 +41,7 @@ Use `ui-inspector` to answer:
 
 Press `Ctrl-C` to exit.
 
-## Step 1: find the window
+## Step 1: Find the Window
 
 List all top-level windows to get the HWND, PID, process name, and title of the target application.
 
@@ -66,7 +66,7 @@ Note the `hwnd` — it uniquely and stably identifies the window for all subsequ
 
 The MCP equivalent for agents: `desktop list_windows`.
 
-## Step 2: walk the element tree
+## Step 2: Walk the Element Tree
 
 Dump the full UIA element tree for a window by its HWND. Output is YAML.
 
@@ -88,7 +88,7 @@ What to look for:
 Elements with `role=window` in the tree are hosted child windows (e.g. embedded WebView, ActiveX, or Win32 controls inside a WPF shell). Their leaf descendants are reachable via `>>`, but the `role=window` element itself cannot be used as a selector target.
 :::
 
-## Step 3: test a selector live
+## Step 3: Test a Selector Live
 
 Once you have a candidate selector, verify it before committing it to a workflow. The MCP `find_elements` action runs a live query against the window and returns each match with its role, name, bounds, and full ancestor chain:
 
@@ -113,7 +113,7 @@ desktop find_elements  hwnd=0x1A2B3C  selector=">> [role=edit][name='File name:'
 
 The ancestor chain shows the exact structural path — useful for deciding where to set anchor boundaries and how to write multi-step selectors. Set `include_siblings: true` to also see peer elements, which helps when you need `:nth` or OR predicates to disambiguate.
 
-## Step 4: identify anchor boundaries
+## Step 4: Identify Anchor Boundaries
 
 With the tree in hand, apply the rules from [Choosing Anchors](./04-declaring-anchors):
 

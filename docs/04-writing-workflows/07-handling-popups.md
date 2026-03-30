@@ -7,11 +7,11 @@ sidebar_label: Handling Popups
 
 Popups and dialogs are the most common reason workflows fail. A save prompt appears when you did not expect one; a permission dialog captures focus mid-sequence; a warning blocks the next click. This page covers the patterns for handling each kind.
 
-## Expected dialogs: inline handling
+## Expected Dialogs: Inline Handling
 
 When a dialog is a known, predictable part of the workflow, handle it inline with a `Session` anchor. Mount it in the phase where it appears, interact with it, unmount it when done.
 
-### The standard Save As dialog
+### The Standard Save As Dialog
 
 The Windows common file dialog is the same across most Win32 applications. Declare it as a `Session` anchor under the main window:
 
@@ -70,11 +70,11 @@ The filename selector `>> [role='combo box'][name='File name:'] >> [role=edit]` 
 
 `unmount: [save_dialog]` releases the Session handle after the phase so it does not accumulate as a stale reference.
 
-## Unsaved-changes prompts: Win10 vs Win11
+## Unsaved-Changes Prompts: Win10 vs Win11
 
 The unsaved-changes prompt is a good example of how the same logical dialog looks completely different on different OS versions.
 
-### Win10: real dialog
+### Win10: Real Dialog
 
 On Win10, closing a Notepad window with unsaved changes produces a child dialog window — a separate OS-level dialog attached to the Notepad process. `DialogPresent` detects it, and the button lives inside the dialog subtree:
 
@@ -99,7 +99,7 @@ On Win10, closing a Notepad window with unsaved changes produces a child dialog 
         anchor: notepad
 ```
 
-### Win11: embedded prompt
+### Win11: Embedded Prompt
 
 On Win11, Notepad has a tabbed interface. The unsaved-changes prompt is not a child dialog — it is rendered inline within the window itself after the tab's close button is clicked. `DialogPresent` does not fire. Instead, the Save/Don't Save buttons appear directly in the window's element tree:
 
@@ -140,11 +140,11 @@ On Win11, Notepad has a tabbed interface. The unsaved-changes prompt is not a ch
 
 The `[name^=Don][name$=Save]` selector handles both `Don't Save` (ASCII apostrophe) and `Don't Save` (Unicode right quote) without quoting the character.
 
-## Unexpected dialogs: recovery handlers
+## Unexpected Dialogs: Recovery Handlers
 
 When a dialog can appear at any point — an error popup, a license warning, a background process notification — handling it inline would require adding a precondition to every step. Recovery handlers are the right tool.
 
-### Dismissing a known dialog type
+### Dismissing a Known Dialog Type
 
 Use `DialogPresent` as the trigger to detect any child dialog on the main window, then click the expected dismissal button:
 
@@ -161,7 +161,7 @@ recovery_handlers:
     resume: retry_step
 ```
 
-### Generic catch-all: `ForegroundIsDialog`
+### Generic Catch-All: `ForegroundIsDialog`
 
 When you do not know what dialog might appear — or the dialog is application-specific and varies by version — use `ForegroundIsDialog`. It fires whenever the OS foreground window is a dialog, regardless of which anchor it belongs to. Combined with `ClickForegroundButton`, it dismisses whatever dialog stole focus:
 
@@ -192,7 +192,7 @@ phases:
       - ...
 ```
 
-### Layering multiple handlers
+### Layering Multiple Handlers
 
 Handlers are checked in order. Put the most specific handler first:
 
@@ -221,7 +221,7 @@ recovery_handlers:
 
 The specific `Errors or Warnings` handler fires first when that particular dialog is present. The generic `dismiss_ok` catches anything else. If neither handler's trigger matches, the step fails normally.
 
-## Dialogs that should abort the workflow
+## Dialogs That Should Abort the Workflow
 
 Not every dialog is safe to dismiss. A fatal error dialog, a data-loss warning, or an authentication prompt that should never appear during automation — these should fail the workflow explicitly rather than being silently dismissed.
 

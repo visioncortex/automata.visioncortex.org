@@ -7,7 +7,7 @@ sidebar_label: Subflows
 
 A subflow phase delegates execution to a child workflow file. The child runs to completion, its declared outputs are returned to the parent, and the parent continues from the next phase.
 
-## The workflow library pattern
+## The Workflow Library Pattern
 
 Think of subflows the way you think of shell scripts calling other shell scripts. Each script is a self-contained unit with its own local variables, its own error handling, and a defined interface (arguments in, exit code out). You build up a library of focused scripts and compose them into larger pipelines.
 
@@ -42,7 +42,7 @@ phases:
     subflow: reset.yml
 ```
 
-### Why this pays off
+### Why This Pays Off
 
 **Author and test independently.** Each child workflow can be run directly to verify it works in isolation. `reset.yml` can be tested without going through the full pipeline. `open_file.yml` can be debugged with a specific test file. The full orchestrator only needs testing once each component is solid.
 
@@ -50,7 +50,7 @@ phases:
 
 **Reuse across workflows.** `reset.yml` is called both as a setup step before a file is opened and as a cleanup step after processing. The same file, called from different orchestrators.
 
-## A real case study: Mastercam
+## A Real Case Study: Mastercam
 
 The Mastercam workflow library processes CAM files end-to-end. The pipeline has five distinct stages, each in its own file:
 
@@ -97,7 +97,7 @@ phases:
 
 `open_file.yml` declares `toolpaths` and `addin_export` in its `outputs:`. `simulator_save_operation.yml` declares `saved_file`. The orchestrator never touches the elements those workflows interact with — it just consumes their outputs.
 
-## Variable scoping
+## Variable Scoping
 
 Like shell scripts, each child workflow has its own local variable scope. Extracted values, `Eval` locals, and intermediate outputs are private to the child. They are not visible in the parent unless the child explicitly declares them in `outputs:`.
 
@@ -112,7 +112,7 @@ outputs:
 
 This prevents the child's internal bookkeeping from polluting the parent's output buffer — the same reason you use local variables in a shell function.
 
-## Anchor scoping
+## Anchor Scoping
 
 Anchor scoping follows the same principle. Root and Session anchors are globally shared across depth — if the parent has a Root anchor named `mastercam`, the child can reference `scope: mastercam` and it resolves to the same window handle. The child is automating the same application, so sharing the window reference is correct.
 
@@ -120,7 +120,7 @@ Stable and Ephemeral anchors are depth-scoped and isolated. A Stable anchor name
 
 In the Mastercam library, every child file declares its own `mastercam` Root anchor. They all resolve to the same running window — there is only one Mastercam process — and the shadow DOM deduplicates the HWND lock automatically.
 
-## Declaring a subflow phase
+## Declaring a Subflow Phase
 
 ```yaml
 phases:
@@ -134,6 +134,6 @@ phases:
 - `params` passes values into the child's declared `params:` — keys must match names the child declares
 - After the phase completes, the child's declared `outputs:` are available as `{output.<key>}` in subsequent phases
 
-## Error handling
+## Error Handling
 
 If the child workflow fails, the subflow phase fails and the parent stops — the same behaviour as a failed step. A `finally` phase in the parent still runs. The child's own `finally` phase also runs before control returns to the parent.

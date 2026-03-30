@@ -7,9 +7,9 @@ sidebar_label: Writing Selectors
 
 A selector that works today can silently stop working after an application update, a locale change, or an OS upgrade. This page covers the practical craft of writing selectors that are precise, stable, and debuggable.
 
-For selector syntax, see [Selectors](../03-core-concepts/06-selectors).
+For selector syntax, see [Selectors](../03-core-concepts/06-selectors.md).
 
-## Property stability: what to trust
+## Property Stability: What to Trust
 
 Not all UIA properties are equally stable. Knowing which ones to prefer changes how you write selectors.
 
@@ -25,7 +25,7 @@ Not all UIA properties are equally stable. Knowing which ones to prefer changes 
 
 **When `id` is absent, combine role and name.** Role alone matches too broadly; name alone may match non-interactive elements or the wrong element type. Together they are usually unambiguous.
 
-## Exact vs. partial matching
+## Exact vs. Partial Matching
 
 Use `=` when the name is fully known and stable. Use partial matching when the name includes dynamic content.
 
@@ -49,7 +49,7 @@ Use `=` when the name is fully known and stable. Use partial matching when the n
 
 This matches "Don't Save" regardless of which apostrophe character is used.
 
-## When to use `:nth` — and when not to
+## When to Use `:nth` — and When Not To
 
 `:nth` is the selector of last resort. It works when it works, but it is the most fragile property you can select on — if any sibling is added, removed, or reordered, the index shifts and you match the wrong element or nothing.
 
@@ -63,7 +63,7 @@ This matches "Don't Save" regardless of which apostrophe character is used.
 
 **When `:nth` is unavoidable, document why.** Add a comment in the workflow YAML explaining what position 2 represents and why it cannot be identified by name.
 
-## Handling unlabelled containers
+## Handling Unlabelled Containers
 
 Many applications have structural containers with no name and no AutomationId — panes, groups, panels used purely for layout. If you need to anchor on one of them, identify it through a child it reliably contains.
 
@@ -85,7 +85,7 @@ Goes two levels up from the Status label to reach the row container. Combined wi
 >> [role=text][name=Status]:parent > [role=button]:nth(0)
 ```
 
-## Handling localization
+## Handling Localization
 
 If the workflow may run against a localized version of the application, name-based selectors can break. The mitigations in order of preference:
 
@@ -97,7 +97,7 @@ If the workflow may run against a localized version of the application, name-bas
    [name=Save|Speichern|Enregistrer]
    ```
 
-## Debugging a selector that does not match
+## Debugging a Selector That Does Not Match
 
 When a step fails because the selector matched nothing, work through this in order:
 
@@ -111,7 +111,7 @@ When a step fails because the selector matched nothing, work through this in ord
 
 **5. Check for virtual lists.** Elements in a virtualised list may not exist in the UIA tree until they are scrolled into view. Use `Invoke` to activate them — `Invoke` does not require a bounding rect and works on off-screen items. Avoid `Click` on virtualised list items; `Click` reads the bounding box and fires at the wrong position when the box is `(0,0,1,1)`.
 
-## Building up selectors iteratively
+## Building Up Selectors Iteratively
 
 The most reliable workflow for writing a new selector:
 

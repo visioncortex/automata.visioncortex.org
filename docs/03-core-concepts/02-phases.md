@@ -7,7 +7,7 @@ sidebar_label: Phases
 
 A phase is the top-level unit of execution within a workflow. Phases run in order; the first failure stops the workflow. Each phase is one of three kinds: an action phase (steps), a flow-control phase (conditional jump), or a subflow phase (delegates to a child workflow).
 
-## Action phases
+## Action Phases
 
 An action phase runs a list of steps and manages anchor lifetime around them.
 
@@ -39,7 +39,7 @@ phases:
 | `recovery` | no | Recovery handler configuration for this phase |
 | `finally` | no | If `true`, the phase runs even when earlier phases have failed |
 
-### Phase lifecycle: mount and unmount
+### Phase Lifecycle: Mount and Unmount
 
 `mount:` activates the listed anchors at the start of the phase before any steps run. Root anchors are resolved immediately on mount; Stable anchors are resolved lazily on first use.
 
@@ -78,7 +78,7 @@ A `finally: true` phase always runs, regardless of whether a previous phase fail
 
 Errors within a `finally` phase are logged but do not override the original workflow error.
 
-### Recovery configuration
+### Recovery Configuration
 
 Opt a phase into named recovery handlers via `recovery.handlers`. The engine checks these handlers whenever a step times out.
 
@@ -94,7 +94,7 @@ Opt a phase into named recovery handlers via `recovery.handlers`. The engine che
 
 `limit` caps total handler invocations across all steps in the phase. The workflow-level `defaults.recovery.limit` applies when no phase-level limit is set (default: 10).
 
-## Flow-control phases
+## Flow-Control Phases
 
 A flow-control phase is a conditional jump. It has no steps and no anchor lifecycle — just a condition and a target phase name.
 
@@ -109,7 +109,7 @@ A flow-control phase is a conditional jump. It has no steps and no anchor lifecy
 
 If the condition is true, execution jumps to the named phase. If false, execution falls through to the next phase in order. See [Control Flow](./12-control-flow) for loop patterns.
 
-## Subflow phases
+## Subflow Phases
 
 A subflow phase delegates to a child workflow YAML file.
 
@@ -121,8 +121,8 @@ A subflow phase delegates to a child workflow YAML file.
     report_name: "{output.report_name}"
 ```
 
-The child runs in the same engine instance. Root and Session anchors from the parent are inherited by the child; Stable and Ephemeral anchors are scoped to the child. See [Subflows](../04-writing-workflows/10-subflows) for details.
+The child runs in the same engine instance. Root and Session anchors from the parent are inherited by the child; Stable and Ephemeral anchors are scoped to the child. See [Subflows](../04-writing-workflows/10-subflows.md) for details.
 
-## Error propagation
+## Error Propagation
 
 When a step fails, the phase stops immediately. The workflow stops unless a `finally: true` phase is configured. The error message includes the phase name, step intent, the failing condition, and the last observed UI state.

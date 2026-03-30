@@ -13,7 +13,7 @@ Without recovery handlers, the only option is to encode every possible interrupt
 
 The goal of a recovery handler is always the same: detect that the workflow has left the happy path, take corrective action to return to it, then resume.
 
-## Declaring a recovery handler
+## Declaring a Recovery Handler
 
 Handlers are declared at the top level of the workflow file under `recovery_handlers:`, then opted into per-phase.
 
@@ -38,7 +38,7 @@ Each handler has three fields:
 | `actions` | List of [Actions](./07-actions) to execute when the trigger fires |
 | `resume` | What the executor does after the actions complete |
 
-## Trigger conditions
+## Trigger Conditions
 
 The trigger is evaluated after `expect` times out on a step. If the trigger is true, the handler fires. If it is false, the engine moves to the next handler (or fails the step if none match).
 
@@ -50,7 +50,7 @@ trigger:
   scope: main_window
 ```
 
-## Corrective actions
+## Corrective Actions
 
 The `actions` list runs in order after the trigger fires. These are the same action types available in steps. The typical pattern is to dismiss the interfering dialog:
 
@@ -61,7 +61,7 @@ actions:
     selector: ">> [role=button][name=OK]"
 ```
 
-## Resume strategies
+## Resume Strategies
 
 After the corrective actions complete, the executor uses the `resume` strategy to decide what to do next:
 
@@ -89,7 +89,7 @@ Treat the step as failed and propagate the error. Use this when the trigger iden
 resume: fail
 ```
 
-## Enabling handlers per phase
+## Enabling Handlers Per Phase
 
 Handlers are opt-in per phase via `recovery.handlers`. Listing a handler name enables it for all steps in that phase.
 
@@ -121,7 +121,7 @@ To opt a single step into recovery handling, set `retry: with_recovery` on that 
   retry: with_recovery
 ```
 
-## Common patterns
+## Common Patterns
 
 **Dismiss an unexpected error dialog:**
 

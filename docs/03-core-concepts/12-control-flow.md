@@ -29,11 +29,11 @@ A phase can declare a `precondition`. If the condition is false when the phase i
 
 If no dialog is present when `close_dialog` is reached, the phase is skipped cleanly.
 
-## Skipping a phase vs. failing
+## Skipping a Phase vs. Failing
 
 A failed `precondition` skips the phase. A failed step (timeout with no matching recovery handler) fails the workflow. These are distinct. Use `precondition` when a phase is genuinely optional; use recovery handlers when a step is expected to succeed but might not.
 
-## Jumping to a named phase
+## Jumping to a Named Phase
 
 A phase can use `flow_control` to jump to any named phase unconditionally, or conditionally based on an `EvalCondition`:
 
@@ -158,7 +158,7 @@ Sum: 55
 
 Phase jumps, mutable variables, and conditional branching together make the workflow language Turing complete. Anything you can express in a structured programming language — loops, counters, accumulators, conditional branches — you can express in a workflow.
 
-## Early exit
+## Early Exit
 
 Jump to a terminal phase to exit early without error:
 
@@ -171,7 +171,7 @@ Jump to a terminal phase to exit early without error:
     go_to: done
 ```
 
-## The `finally` block
+## The `finally` Block
 
 A phase named `finally` runs unconditionally at the end of a workflow, whether it succeeded, failed, or was jumped to early. Use it to close applications, clean up temporary files, or restore state.
 

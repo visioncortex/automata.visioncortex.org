@@ -5,27 +5,23 @@ Documentation site for [ui-automata](https://ui-automata.visioncortex.org), buil
 ## Setup
 
 ```bash
-nvm use        # switches to Node 18 (reads .nvmrc)
-npm install
+nvm use # switches to Node 20 (reads .nvmrc)
+npm install --legacy-peer-deps
 ```
 
 ## Development
 
 ```bash
-npm run start  # starts dev server at http://localhost:3000 with live reload
+npm run start # starts dev server at http://localhost:3000 with live reload
 ```
 
 ## Build
 
 ```bash
-npm run build  # produces static output in build/
-npm run serve  # preview the build locally
+npm run build # produces static output in build/
+npm run serve # preview the build locally
 ```
 
 ## Content
 
 Documentation lives in `docs/`. The sidebar is auto-generated from the directory structure — file and folder names drive ordering and nesting.
-
----
-
-Copyright (c) 2025 VisionCortex. All rights reserved.

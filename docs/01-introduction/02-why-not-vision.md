@@ -19,13 +19,13 @@ Vision models infer intent from pixels. Pixel coordinates shift when the window 
 
 UIA selectors target semantic properties: the element's role, its name, its automation ID. These survive resolution changes, theme changes, and most application updates. A selector that worked last week still works today.
 
-## Cost per run
+## Cost Per Run
 
 Vision inference is billed per token and per image. A logical "10-step" workflow generates far more than 10 screenshots in practice: activating a menu requires a screenshot, waiting for the submenu to appear requires another, clicking an item requires another. Each intermediate UI state the agent needs to observe is a separate inference call. At any meaningful run frequency, those costs add up.
 
 UIA queries run locally on the Windows machine. Once the workflow is written, there is no inference cost to execute it.
 
-## When vision comes into play
+## When Vision Comes into Play
 
 Vision and ui-automata complement each other well. The typical pattern:
 

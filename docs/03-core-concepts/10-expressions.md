@@ -7,7 +7,7 @@ sidebar_label: Expressions
 
 Workflows have two distinct mechanisms for working with values at runtime. Understanding which one to use — and why they are separate — avoids confusion.
 
-## Two mechanisms
+## Two Mechanisms
 
 ### 1. YAML substitution: `{...}`
 
@@ -30,7 +30,7 @@ args:
 
 YAML substitution is simple text replacement. It has no operators, no functions, no types.
 
-### 2. The expression language
+### 2. The Expression Language
 
 The expression language is a typed evaluator used specifically in:
 - `Eval` action's `expr` field
@@ -50,7 +50,7 @@ It has three value types, arithmetic and comparison operators, and a set of buil
 
 Here `size` is a bare identifier that resolves from the locals/output buffer. No `{...}` needed.
 
-## The type system
+## The Type System
 
 The evaluator has three types: **String**, **Number** (64-bit float), and **Bool**.
 
@@ -94,7 +94,7 @@ The key difference from bash: `Bool` is an explicit type. In bash, any non-empty
 | Path join | `"$a/$b"` | `path_join(a, b)` |
 | Subexpression | `$(...)` | `(...)` grouping only |
 
-### The polymorphic `+` operator
+### The Polymorphic `+` Operator
 
 `+` is the most context-sensitive operator:
 
@@ -110,7 +110,7 @@ The coercion rule can surprise you: `'3' + 4` evaluates to `7` (Number), not `"3
 
 For building file paths, prefer `path_join` over manual concatenation — it handles separators correctly.
 
-### Comparison operators
+### Comparison Operators
 
 `==` and `!=` try numeric comparison first, fall back to string comparison:
 
@@ -126,7 +126,7 @@ output.count > 0         # "5" > 0 → true
 output.count > 'abc'     # error: operator `>` requires a number
 ```
 
-### Boolean operators
+### Boolean Operators
 
 `&&` and `||` require both operands to be `Bool`. There is no implicit truthiness — you cannot write `output.value && something`. You must produce a `Bool` first via a comparison:
 
@@ -136,7 +136,7 @@ output.count && output.status               # error: not Bool values
 ```
 
 
-##Variable namespaces
+## Variable Namespaces
 
 | Reference | Resolves to |
 |---|---|
@@ -150,7 +150,7 @@ Bare identifiers are the short form for locals: in `(size + 8) % 24 + 12`, `size
 Missing keys resolve to `""` (empty string) rather than an error.
 
 
-##Operator precedence
+## Operator Precedence
 
 From highest to lowest:
 
@@ -165,7 +165,7 @@ From highest to lowest:
 | 7 | `\|\|` — both operands must be `Bool` |
 
 
-##Built-in functions
+## Built-In Functions
 
 ### Arithmetic
 
@@ -185,13 +185,13 @@ From highest to lowest:
 | `strlen(s)` | Length of a string in bytes |
 | `split_lines(text, n)` | Split `text` by newlines and return line at index `n` (negative index counts from the end) |
 
-### Output buffer
+### Output Buffer
 
 | Function | Description |
 |---|---|
 | `output_count('key')` | Number of values stored under `key` — useful after `Extract` with `multiple: true` |
 
-### Path manipulation
+### Path Manipulation
 
 | Function | Description |
 |---|---|
@@ -200,7 +200,7 @@ From highest to lowest:
 | `path_join(a, b)` | Join two path segments |
 
 
-##String literals
+## String Literals
 
 String literals use single quotes. Escape sequences: `\'`, `\\`, `\n`, `\r`, `\t`.
 
@@ -213,7 +213,7 @@ String literals use single quotes. Escape sequences: `\'`, `\\`, `\n`, `\r`, `\t
 Integer-valued numbers are formatted without a decimal point: `12.0` becomes `"12"` when stored.
 
 
-##`EvalCondition`
+## `EvalCondition`
 
 When used as a condition (`EvalCondition`), the expression **must** evaluate to `Bool`. An expression that returns a `Number` or `String` is an error.
 
@@ -224,7 +224,7 @@ expect:
 ```
 
 
-##Practical examples
+## Practical Examples
 
 **Cycle a counter with modulo:**
 ```yaml

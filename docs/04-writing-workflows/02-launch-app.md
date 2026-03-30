@@ -7,7 +7,7 @@ sidebar_label: Launch & Mount
 
 Before a workflow can interact with a UI, it needs a handle to a window. There are two situations: you need to launch the application yourself, or the application is already running and you need to attach to it.
 
-## Launching an application
+## Launching an Application
 
 Use the top-level `launch:` field to start an application before the first phase runs. The executor waits for a window to appear before proceeding.
 
@@ -26,7 +26,7 @@ launch:
 
 `app:` accepts a URI scheme name (`ms-settings`, `ms-windows-store`), a full URI (`ms-settings:display`), or a UWP AppID.
 
-## Wait strategies
+## Wait Strategies
 
 The `wait:` field controls which window the engine locks to after launch. Getting this wrong is the most common launch bug — the engine attaches to the wrong window and the first step fails immediately.
 
@@ -77,7 +77,7 @@ anchors:
 
 The `wait:` strategy for UWP apps is typically `new_window` or `match_any` — the launch is indirect and `new_pid` will not match because `ApplicationFrameHost` was already running.
 
-## Handing off to a different process
+## Handing Off to a Different Process
 
 When the launched executable immediately spawns a *different* process (e.g. `control.exe` delegates to `explorer.exe`), use `wait_for:` pointing to an anchor that filters on the target process name:
 
@@ -93,7 +93,7 @@ anchors:
     selector: "[name~=Control Panel]"
 ```
 
-## Attaching to an existing window
+## Attaching to an Existing Window
 
 If the application is already running, skip `launch:` entirely. Declare a `Root` anchor and mount it in the first phase:
 

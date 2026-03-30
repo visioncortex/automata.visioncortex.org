@@ -14,7 +14,7 @@ The workflow library grows with real-world usage. If you have a workflow for an 
 - Use `{workflow.dir}` for any scripts or assets packaged alongside the workflow.
 - Add the schema comment at the top of every file: `# yaml-language-server: $schema=...`
 
-## OS-specific workflows
+## OS-Specific Workflows
 
 If a workflow differs between Win10 and Win11, place both versions under `win10/<app>/` and `win11/<app>/` rather than adding version-detection logic to a single file. Keeping them separate makes each file simpler and independently testable.
 

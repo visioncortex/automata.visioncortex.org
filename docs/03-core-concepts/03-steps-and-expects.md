@@ -1,13 +1,13 @@
 ---
-title: Steps and Intents
-sidebar_label: Steps & Intents
+title: Steps and Expects
+sidebar_label: Steps & Expects
 ---
 
-# Steps and Intents
+# Steps and Expects
 
 A step is the atomic unit of work in a workflow. Each step performs one action, then waits for a condition to become true before the workflow continues.
 
-## Anatomy of a step
+## Anatomy of a Step
 
 ```yaml
 - intent: click the Save button
@@ -133,7 +133,7 @@ What to do immediately after the step succeeds:
   on_success: return_phase
 ```
 
-## Workflow defaults
+## Workflow Defaults
 
 Set `defaults` at the top of the workflow file to apply a timeout and retry policy to every step that does not specify its own:
 
@@ -146,6 +146,6 @@ defaults:
       delay: 1s
 ```
 
-## Reading step traces
+## Reading Step Traces
 
 When a step fails, the error includes the phase name, step intent, the failing condition type, and the last observed element state. Reading the intent label is usually enough to locate the failing step in the YAML.

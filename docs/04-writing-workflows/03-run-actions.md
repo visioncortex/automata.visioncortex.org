@@ -7,9 +7,9 @@ sidebar_label: Actions in Depth
 
 Actions are the verbs of a workflow. Each step executes exactly one action and then waits for its `expect` condition. This page covers every action type with practical examples drawn from real workflows.
 
-For a quick reference of all action types, see [Actions](../03-core-concepts/07-actions).
+For a quick reference of all action types, see [Actions](../03-core-concepts/07-actions.md).
 
-## Mouse actions
+## Mouse Actions
 
 ### `Click`
 
@@ -106,7 +106,7 @@ Scrolls ancestor containers until the element is within their visible viewport, 
 Do not use `ScrollIntoView` for items in WinUI / UWP scrollable lists — wheel events trigger elastic scroll and the list snaps back. Use `Invoke` instead.
 :::
 
-## Keyboard actions
+## Keyboard Actions
 
 ### `TypeText`
 
@@ -149,7 +149,7 @@ Common keys: `{ENTER}`, `{TAB}`, `{ESC}`, `{BACKSPACE}`, `{DELETE}`, `{F5}`, `{U
 
 Modifier combinations: `{CTRL+A}`, `{CTRL+S}`, `{CTRL+Z}`, `{ALT+F4}`, `{SHIFT+TAB}`
 
-## Value actions
+## Value Actions
 
 ### `SetValue`
 
@@ -172,7 +172,7 @@ Sets the value of an edit field or combo box directly via UIA's `ValuePattern`, 
 
 Prefer `SetValue` over `TypeText` when you need to replace an existing value, or when the field processes each keystroke individually (e.g. search fields with live filtering).
 
-## UIA pattern actions
+## UIA Pattern Actions
 
 ### `Invoke`
 
@@ -208,7 +208,7 @@ Gives keyboard focus to the element without clicking or invoking it.
     type: Always
 ```
 
-## Window actions
+## Window Actions
 
 ### `ActivateWindow`
 
@@ -252,7 +252,7 @@ Closes the anchor's window via its close button (sends `WM_CLOSE`). If closing t
     scope: notepad
 ```
 
-## Dialog helpers
+## Dialog Helpers
 
 ### `DismissDialog`
 
@@ -282,7 +282,7 @@ actions:
 
 Like `ClickForegroundButton` but matches any element type, not just buttons.
 
-## Data actions
+## Data Actions
 
 ### `Extract`
 
@@ -343,7 +343,7 @@ Writes all values stored under a key in the output buffer to a file, one CSV-quo
     path: "{param.output_dir}\\results.csv"
 ```
 
-## System actions
+## System Actions
 
 ### `Exec`
 
@@ -377,7 +377,7 @@ Moves or renames a file. Creates the destination directory if needed. Fails if t
     path: "{param.archive_dir}\\{output.filename}"
 ```
 
-## Flow actions
+## Flow Actions
 
 ### `NoOp`
 
@@ -408,7 +408,7 @@ Pauses for a fixed duration before the `expect` condition is evaluated. Use spar
     selector: ">> [role=tooltip]"
 ```
 
-## `run_actions`: trying actions interactively
+## `run_actions`: Trying Actions Interactively
 
 The `run_actions` MCP tool lets an agent execute a sequence of steps against a live window without creating a workflow file. It is the fastest way to test a selector, verify an action works, or prototype a phase before committing it to YAML.
 

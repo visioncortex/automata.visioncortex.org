@@ -7,7 +7,7 @@ sidebar_label: MCP Tools Reference
 
 `automata-agent` exposes all ui-automata capabilities to Claude as MCP tools. Each tool covers a category of operations; within a tool, an `action` parameter selects the specific operation. This keeps the tool list short and the schema self-documenting.
 
-## Workflow tools
+## Workflow Tools
 
 ### `workflow`
 
@@ -27,7 +27,7 @@ Execute a list of UI automation steps directly, without a workflow file. Each st
 
 Useful for one-off interactions or for an agent that is composing its own steps on the fly rather than calling a pre-built workflow.
 
-## UI inspection
+## UI Inspection
 
 ### `desktop`
 
@@ -41,7 +41,7 @@ OCR and visual layout capture. Returns a YAML tree of visible UI regions and tex
 
 Use `vision` when UIA gives incomplete information — custom-rendered controls, game UIs, or applications that draw their own widgets. Coordinates returned by `vision` are in screen space and can be passed directly to `input mouse_click`.
 
-## Application management
+## Application Management
 
 ### `app`
 
@@ -71,7 +71,7 @@ Control Microsoft Edge via the Chrome DevTools Protocol. List tabs, navigate, ev
 
 For web-based workflows where UIA is insufficient — Edge's UIA tree does not expose full page content. CDP gives direct access to the page DOM and JavaScript runtime.
 
-## Filesystem and system
+## Filesystem and System
 
 ### `file`
 

@@ -9,7 +9,7 @@ The JSON Schema and the `ui-workflow-check` linter serve different roles. The sc
 
 Use both. The schema gives instant inline feedback in the editor. The linter catches the errors that slip through.
 
-## Running the linter
+## Running the Linter
 
 ```
 ui-workflow-check workflow.yml
@@ -25,9 +25,9 @@ Exits **0** if all files are valid. Exits **1** if any diagnostics are found. Ex
 
 When multiple files are passed, each valid file prints `<path>: ok` so you can see what was checked. Errors always print regardless.
 
-## What the linter checks
+## What the Linter Checks
 
-### Cross-reference errors
+### Cross-Reference Errors
 
 These are the errors the schema cannot catch — references to things that must exist elsewhere in the same file:
 
@@ -38,7 +38,7 @@ These are the errors the schema cannot catch — references to things that must 
 | Unknown `{param.xxx}` in any string field | `unknown param 'output_dir' (declared: folder, filename)` |
 | Unclosed `{` in an interpolation token | `unclosed '{' in interpolation token` |
 
-### Selector syntax
+### Selector Syntax
 
 Every `selector` field is parsed by the same selector engine used at runtime. A selector that would fail to parse at runtime is an error at lint time:
 
@@ -52,7 +52,7 @@ error: expected predicate after '['
 
 (Missing `][` between predicates.)
 
-### Expression syntax
+### Expression Syntax
 
 `expr` fields in `Eval` and `EvalCondition` are checked for syntax errors:
 
@@ -64,7 +64,7 @@ error: unexpected token '**' in expression
    |                ^^ phases[0].steps[1].action.expr
 ```
 
-### Structural constraints
+### Structural Constraints
 
 Some structural rules cannot be expressed in JSON Schema:
 
@@ -73,7 +73,7 @@ Some structural rules cannot be expressed in JSON Schema:
 - `Subflow` phase requires `subflow`
 - Action phase requires `steps`
 
-### Missing required fields
+### Missing Required Fields
 
 The linter reports missing required fields with the YAML path to the offending node:
 
@@ -85,7 +85,7 @@ error: missing required field 'intent'
    |     phases[0].steps[0]
 ```
 
-## Error output format
+## Error Output Format
 
 Errors use a Rust-compiler-style format with a source excerpt and caret underline:
 

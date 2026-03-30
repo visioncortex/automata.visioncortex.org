@@ -1,21 +1,21 @@
 ---
-title: What is ui-automata?
-sidebar_label: What is ui-automata?
+title: What is UI Automata?
+sidebar_label: What is UI Automata?
 ---
 
-# What is ui-automata?
+# What is UI Automata?
 
-ui-automata is a declarative workflow engine for Windows UI automation, designed from the ground up for AI agents. Instead of writing scripts that click at coordinates or sleep-and-hope, you describe what should happen. The engine handles action, recovery, and observability.
+UI Automata is a declarative workflow engine for Windows UI automation, designed from the ground up for AI agents. Instead of writing scripts that click at coordinates or sleep-and-hope, you describe what should happen. The engine handles action, recovery, and observability.
 
-## The delegation problem
+## The Delegation Problem
 
 There is a category of work that is too interactive to automate with a traditional script, and too tedious to keep doing by hand. Checking a service status in Event Viewer. Extracting a value from a legacy desktop application. Configuring a settings dialog that has no API. These tasks require judgment (but not much of it). They are exactly the kind of thing you would hand off to a capable colleague.
 
 AI agents can be that colleague. But today, "computer use" usually means an agent staring at screenshots, guessing where to click, and hoping nothing moved. That approach is slow, expensive, and breaks the moment the window is a pixel off.
 
-ui-automata is a different answer: give the agent a structured, reliable interface to the Windows UI (fast, auditable, and recoverable) so it can act with the same confidence a human would.
+UI Automata is a different answer: give the agent a structured, reliable interface to the Windows UI (fast, auditable, and recoverable) so it can act with the same confidence a human would.
 
-## How it works
+## How It Works
 
 You write a workflow in YAML. Each step has three parts: an **action** (what to do), an **expect** (what state the UI should be in afterward), and optionally a **recovery** (what to do if something goes wrong).
 
@@ -35,7 +35,7 @@ The engine executes the action, then polls the `expect` condition every 100ms. I
 
 There are no sleeps. No guessing. No silent failures.
 
-## Key properties
+## Key Properties
 
 **Declarative.** You describe goals, not procedures. The engine handles the polling loop, the retry logic, and the anchor lifecycle.
 
@@ -45,7 +45,7 @@ There are no sleeps. No guessing. No silent failures.
 
 **Agent-native.** The MCP interface lets an AI agent inspect a live Windows UI, author workflow steps interactively, run them immediately, and promote working steps into a reusable workflow file. The entire loop (explore, script, verify, save) happens in a conversation.
 
-## Who it is for
+## Who It Is For
 
 **IT and support teams** that want an agent to handle interactive Windows tasks (checking service state, gathering diagnostics, configuring software) without having to RDP in manually.
 

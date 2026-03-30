@@ -7,7 +7,7 @@ sidebar_label: File & System
 
 Beyond UI automation, ui-automata exposes file system and system command capabilities on the connected Windows machine — useful for reading logs, moving artifacts, running scripts, and gathering diagnostics as part of a larger agent workflow.
 
-## File operations
+## File Operations
 
 The `file` tool covers the full range of filesystem operations: list, read, write, append, copy, move, delete, mkdir, rmdir, stat, glob, and checksum.
 
@@ -17,7 +17,7 @@ The `file` tool covers the full range of filesystem operations: list, read, writ
 
 The `clipboard` tool reads and writes the Windows clipboard. Useful for extracting content that is easier to copy than to read via UIA, or for injecting data into an application via paste.
 
-## Executing commands
+## Executing Commands
 
 The `system exec` action runs a program directly — pass the program and arguments as an array, no shell involved. `cmd.exe`, `powershell.exe`, and `bash.exe` (Git for Windows) are handled with sensible defaults auto-configured.
 
@@ -26,11 +26,11 @@ system exec ["powershell.exe", "Get-Service -Name Spooler | Select Status"]
 system exec ["cmd.exe", "dir /b C:\\Users\\chris\\Documents"]
 ```
 
-## System information
+## System Information
 
 `system` also provides: current username and home directory (`whoami`), running process list (`list_processes`), process termination (`kill_process`), network config (`ipconfig`, `route_table`), and PATH lookup (`get_path`).
 
-## Security considerations
+## Security Considerations
 
 The file and system tools give an agent broad access to the Windows machine. Some things to be aware of:
 

@@ -7,7 +7,7 @@ sidebar_label: Schema & IDE
 
 ui-automata ships a JSON Schema generated directly from the Rust types that power the executor. Add a single comment to any workflow file and your editor validates your YAML, offers autocomplete for every field, and shows inline documentation for every action and condition type.
 
-## Adding the schema reference
+## Adding the Schema Reference
 
 Paste this comment at the top of any workflow YAML file:
 
@@ -30,7 +30,7 @@ The extension will:
 - Show hover documentation pulled from the schema's `description` fields
 - Validate required fields are present and values match their expected types
 
-## What the schema validates
+## What the Schema Validates
 
 The schema is generated from the same Rust types used at runtime, so any file that passes schema validation is structurally correct. The schema checks:
 

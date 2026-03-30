@@ -1,12 +1,12 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'ui-automata',
+  title: 'UI Automata',
   tagline: 'Windows UI automation for AI agents',
   url: 'https://ui-automata.visioncortex.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
-  favicon: 'favicon.ico',
+  favicon: 'img/icon.png',
   organizationName: 'visioncortex',
   projectName: 'ui-automata',
   trailingSlash: true,
@@ -15,15 +15,15 @@ module.exports = {
       respectPrefersColorScheme: true,
     },
     navbar: {
-      title: 'ui-automata',
+      title: 'UI Automata',
       logo: {
-        alt: 'ui-automata logo',
-        src: 'img/logo.png',
+        alt: 'UI Automata logo',
+        src: 'img/icon.png',
       },
       items: [
         {
           type: 'doc',
-          docId: '01-introduction/01-what-is-ui-automata',
+          docId: 'introduction/what-is-ui-automata',
           position: 'left',
           label: 'Docs',
         },
@@ -51,7 +51,7 @@ module.exports = {
             },
             {
               label: 'Core Concepts',
-              to: '/docs/03-core-concepts/01-workflow-structure',
+              to: '/docs/core-concepts/workflow-engine/',
             },
           ],
         },
@@ -78,7 +78,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} visioncortex`,
+      copyright: `Copyright © ${new Date().getFullYear()} visioncortex.org`,
     },
     prism: {
       theme: require('prism-react-renderer/themes/vsLight'),

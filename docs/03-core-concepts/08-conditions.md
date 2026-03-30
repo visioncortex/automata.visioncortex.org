@@ -7,7 +7,7 @@ sidebar_label: Conditions
 
 A condition is a boolean predicate the engine polls every 100ms until it passes or the step's timeout expires. The same condition types appear as `expect`, `precondition`, recovery `trigger`, and flow-control predicates.
 
-## Element conditions
+## Element Conditions
 
 These conditions locate an element within an anchor's subtree using a selector.
 
@@ -68,7 +68,7 @@ Use `regex` when the other match modes cannot express the condition. The main re
 
 `(\d+) of \1` matches text like `"123 of 123"` — where the total equals the current count — using a backreference to the first capture group. `exact` cannot be used because the numbers are not known in advance. Only the backreference can express "these two numbers must be the same."
 
-## Window conditions
+## Window Conditions
 
 | Type | Fields | True when |
 |---|---|---|
@@ -99,7 +99,7 @@ expect:
   state: active
 ```
 
-## System conditions
+## System Conditions
 
 | Type | Fields | True when |
 |---|---|---|
@@ -120,7 +120,7 @@ expect:
 
 `Always` is used as `expect` on steps where the action itself guarantees success (e.g. `NoOp`, `Capture`, `Eval`).
 
-## Logic combinators
+## Logic Combinators
 
 Compose conditions with `AllOf`, `AnyOf`, and `Not`.
 

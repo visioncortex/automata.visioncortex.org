@@ -7,7 +7,7 @@ sidebar_label: Workflow Engine
 
 A workflow file is static YAML. The workflow engine is what runs it. Understanding what the engine does on each step — and what it does when something goes wrong — is the foundation for writing workflows that are reliable in practice, not just on the happy path.
 
-## The execution model
+## The Execution Model
 
 The engine runs phases in order. Within each phase, it runs steps in order. Each step has the same lifecycle:
 
@@ -18,7 +18,7 @@ The engine runs phases in order. Within each phase, it runs steps in order. Each
 
 That polling loop is the core of the engine. There are no `sleep` calls. The engine does not guess how long to wait — it waits exactly as long as the UI takes to reach the expected state, up to the declared timeout.
 
-## What the engine tracks
+## What the Engine Tracks
 
 While a workflow runs, the engine maintains several pieces of state:
 
@@ -28,7 +28,7 @@ While a workflow runs, the engine maintains several pieces of state:
 
 **Workflow variables** accumulate across steps. Extracted values, evaluated expressions, and parameter substitutions are all stored here and available to subsequent steps by name.
 
-## What happens on timeout
+## What Happens on Timeout
 
 A timeout is not an immediate failure. Before failing the step, the engine checks the declared recovery handlers in order. Each handler specifies a trigger condition — "is there an unexpected dialog on screen?", "is the target element still disabled?" — and if the trigger matches, the engine runs the handler's corrective actions and then resumes according to the handler's strategy: retry the step, skip it, or fail the workflow.
 
@@ -36,13 +36,13 @@ If no handler matches, the step fails and the workflow stops.
 
 This design separates the common case (things go as expected) from the exceptional case (something interrupted the flow). The happy path stays clean; edge cases are handled explicitly and in one place.
 
-## How phases fit in
+## How Phases Fit In
 
 Phases are the unit of lifecycle management. When a phase starts, it mounts its declared anchors — resolving their handles and making them available as `scope` targets in actions and conditions. When the phase ends, anchors listed in `unmount:` are released. Root anchors are the exception: they cannot be unmounted and persist for the entire workflow, locked to the original window handle.
 
 This means anchor lifetime is explicit. Only anchors you declare in `unmount:` are released at phase end; everything else stays live until the workflow finishes.
 
-## The anatomy of a workflow file
+## The Anatomy of a Workflow File
 
 For reference, a workflow file has the following top-level structure:
 

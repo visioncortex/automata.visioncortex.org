@@ -7,7 +7,7 @@ sidebar_label: Extracting Data
 
 Many workflows do not just drive a UI — they read from it. The `Extract` action reads a value from a UI element and stores it under a named key. That key is then available as `{output.key}` in every subsequent step, condition, and expression.
 
-## Extract a single value
+## Extract a Single Value
 
 ```yaml
 - intent: read the current filename
@@ -24,7 +24,7 @@ Many workflows do not just drive a UI — they read from it. The `Extract` actio
 
 Use `EvalCondition` as `expect` to verify the extraction actually produced something. `Always` would succeed even if the element was empty or the selector matched nothing meaningful.
 
-## Attribute types
+## Attribute Types
 
 | Attribute | Reads |
 |---|---|
@@ -32,7 +32,7 @@ Use `EvalCondition` as `expect` to verify the extraction actually produced somet
 | `name` | The UIA Name property — the element's accessible label or caption. |
 | `inner_text` | Direct children's names joined by newlines. Useful for composite controls like list items or tooltips where the meaningful content lives in child elements. |
 
-## Extract, compute, reuse
+## Extract, Compute, Reuse
 
 The real power of extraction is what you can do with the value once you have it. A common pattern: read a value from the UI, compute a derived value, then use it to drive a subsequent action.
 
@@ -83,7 +83,7 @@ phases:
 
 Three steps: extract the default name, build the full path with `Eval`, write it back with `SetValue`. The `expect` on the final step verifies the field actually contains the computed value before the workflow proceeds.
 
-## Extract multiple values
+## Extract Multiple Values
 
 Set `multiple: true` to extract all matching elements. The values are stored as a list under the key.
 
@@ -101,7 +101,7 @@ Set `multiple: true` to extract all matching elements. The values are stored as 
     expr: "output_count('row_labels') > 0"
 ```
 
-## Returning values as workflow outputs
+## Returning Values as Workflow Outputs
 
 When the workflow is used as a subflow, only keys declared in `outputs:` are returned to the caller. Keys not listed are workflow-local.
 
@@ -111,4 +111,4 @@ outputs:
   - name: full_path
 ```
 
-See [Parameters and Outputs](../03-core-concepts/09-parameters-and-outputs) for the full declaration syntax.
+See [Parameters and Outputs](../03-core-concepts/09-parameters-and-outputs.md) for the full declaration syntax.

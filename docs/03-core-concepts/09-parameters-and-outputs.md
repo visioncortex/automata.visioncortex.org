@@ -7,7 +7,7 @@ sidebar_label: Params & Outputs
 
 Workflows are reusable. Parameters let callers pass values in; outputs let workflows return structured data back to the caller — whether that is another workflow, an MCP tool call, or a test assertion.
 
-## Declaring parameters
+## Declaring Parameters
 
 Parameters are declared at the top of the workflow file:
 
@@ -28,7 +28,7 @@ params:
 
 Parameters without a `default` must be supplied at runtime. Missing required parameters are a fatal error at workflow start.
 
-## Referencing parameters
+## Referencing Parameters
 
 Use `{param.name}` in any string field of the workflow YAML: selectors, intent strings, text fields, file paths, script arguments.
 
@@ -60,7 +60,7 @@ Substitution happens before YAML parsing, so parameters can appear in selectors 
 selector: ">> [role=list item][name={param.folder}]"
 ```
 
-## Declaring outputs
+## Declaring Outputs
 
 Outputs are declared at the top of the workflow file:
 
@@ -75,7 +75,7 @@ When `outputs:` is present, only the listed keys are returned to the caller when
 
 When `outputs:` is absent, all extracted keys are returned (backwards-compatible behaviour).
 
-## Extracting values into outputs
+## Extracting Values into Outputs
 
 Use the `Extract` action to read a value from a UI element. Use `EvalCondition` as the `expect` to verify the extraction actually produced something — `Always` will succeed even if the element was empty:
 
@@ -116,11 +116,11 @@ Use `WriteOutput` to write a value directly without computation:
     type: Always
 ```
 
-## Using outputs
+## Using Outputs
 
 Once written, an output key is available as `{output.key}` in all subsequent steps, conditions, and Eval expressions within the same workflow and any subflows it calls.
 
-## Passing parameters at runtime
+## Passing Parameters at Runtime
 
 From the CLI:
 
