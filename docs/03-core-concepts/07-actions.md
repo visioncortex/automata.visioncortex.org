@@ -77,6 +77,28 @@ Moves or renames a file. Supports `{output.*}` and `{param.*}` substitution in b
 
 Writes a string to a file, creating it if it does not exist.
 
+## Browser Actions
+
+### BrowserNavigate
+
+Navigates a browser tab to a URL. Requires a `Tab` anchor as `scope`.
+
+```yaml
+- intent: navigate to gitforwindows.org
+  action:
+    type: BrowserNavigate
+    scope: git_tab
+    url: "https://gitforwindows.org"
+  expect:
+    type: TabWithAttribute
+    scope: git_tab
+    title:
+      contains: "Git for Windows"
+  timeout: 30s
+```
+
+After navigation the engine continues evaluating the `expect` condition until the tab's title (or other attribute) matches. Use `TabWithAttribute` to confirm the page has loaded before proceeding.
+
 ## The NoOp Action
 
 `NoOp` performs no action but still evaluates its `expect` condition. Use it to wait for a state to become true without doing anything:

@@ -34,8 +34,10 @@ The `type:` field sets the lifetime tier — how the engine resolves the handle 
 | `Session` | Desktop windows; may appear and disappear | Non-fatal; re-resolved on next use |
 | `Stable` | Parent anchor's subtree | Re-queried automatically from nearest live ancestor |
 | `Ephemeral` | Parent anchor's subtree | Stored via `Capture`; released when its phase exits |
+| `Browser` | A running browser instance (Edge/Chrome) via CDP | Fatal error |
+| `Tab` | A single browser tab within a `Browser` anchor | Re-resolved on next use |
 
-`Root` is for the main application window. `Stable` is for panels, toolbars, and editors within it. `Session` is for transient windows like progress dialogs that may or may not be present. `Ephemeral` is for handles captured dynamically at runtime.
+`Root` is for the main application window. `Stable` is for panels, toolbars, and editors within it. `Session` is for transient windows like progress dialogs that may or may not be present. `Ephemeral` is for handles captured dynamically at runtime. `Browser` and `Tab` are for web browser automation — see [Browser Anchors](#browser-anchors) below.
 
 ## Mount and Unmount
 
@@ -66,6 +68,63 @@ action:
 ```
 
 The selector `>> [role=button][name=Save]` is evaluated within the `editor` anchor's subtree, not the entire desktop.
+
+## Browser Anchors
+
+`Browser` and `Tab` are specialized anchor types for controlling a web browser. They connect via CDP (Chromium DevTools Protocol) and integrate with the UIA window for actions that require a real user gesture.
+
+#### `Browser`
+
+Represents a running browser instance. The engine connects to Edge via CDP on mount and holds the connection for the phase.
+
+```yaml
+anchors:
+  edge:
+    type: Browser
+```
+
+A `Browser` anchor is always a top-level anchor — it has no `parent`. It behaves like a `Root` anchor in that it is registered on first mount and held for the rest of the workflow. It also serves as the UIA scope for actions targeting the browser window itself (address bar, toolbar, Downloads panel).
+
+#### `Tab`
+
+Represents a single browser tab. A `Tab` anchor must have a `Browser` anchor as its `parent`.
+
+```yaml
+anchors:
+  my_tab:
+    type: Tab
+    parent: edge
+```
+
+The engine tracks the tab by its CDP tab ID. Tab anchors are used as `scope` for `BrowserNavigate` actions and `TabWithAttribute` conditions. When the tab is navigated or reloaded, the anchor remains live — the engine follows the same tab.
+
+#### Using Browser and Tab Together
+
+Declare both anchors and mount the `Browser` anchor together with the `Tab` anchor in the phase that opens the page:
+
+```yaml
+anchors:
+  edge:
+    type: Browser
+  my_tab:
+    type: Tab
+    parent: edge
+
+phases:
+  - name: navigate
+    mount: [edge, my_tab]
+    steps:
+      - intent: navigate to the target page
+        action:
+          type: BrowserNavigate
+          scope: my_tab
+          url: "https://example.com"
+        expect:
+          type: TabWithAttribute
+          scope: my_tab
+          title:
+            contains: "Example"
+```
 
 ## Filtering by Process or PID
 

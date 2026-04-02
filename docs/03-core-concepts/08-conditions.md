@@ -68,6 +68,24 @@ Use `regex` when the other match modes cannot express the condition. The main re
 
 `(\d+) of \1` matches text like `"123 of 123"` — where the total equals the current count — using a backreference to the first capture group. `exact` cannot be used because the numbers are not known in advance. Only the backreference can express "these two numbers must be the same."
 
+## Browser Conditions
+
+| Type | Fields | True when |
+|---|---|---|
+| `TabWithAttribute` | `scope` (Tab anchor), `title` | The browser tab matches the given title |
+
+`TabWithAttribute` requires a `Tab` anchor as `scope`. Use it after `BrowserNavigate` to confirm that the page has loaded:
+
+```yaml
+expect:
+  type: TabWithAttribute
+  scope: git_tab
+  title:
+    contains: "Git for Windows"
+```
+
+`title` uses the same `TitleMatch` patterns as `WindowWithAttribute` — `exact`, `contains`, `starts_with`.
+
 ## Window Conditions
 
 | Type | Fields | True when |
