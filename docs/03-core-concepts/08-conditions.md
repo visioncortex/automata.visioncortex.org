@@ -73,6 +73,7 @@ Use `regex` when the other match modes cannot express the condition. The main re
 | Type | Fields | True when |
 |---|---|---|
 | `TabWithAttribute` | `scope` (Tab anchor), `title` | The browser tab matches the given title |
+| `TabWithState` | `scope` (Tab anchor), `expr` | The JS expression evaluates to a truthy value in the tab |
 
 `TabWithAttribute` requires a `Tab` anchor as `scope`. Use it after `BrowserNavigate` to confirm that the page has loaded:
 
@@ -85,6 +86,15 @@ expect:
 ```
 
 `title` uses the same `TitleMatch` patterns as `WindowWithAttribute` — `exact`, `contains`, `starts_with`.
+
+`TabWithState` evaluates an arbitrary JavaScript expression in the tab and passes when the result is truthy. Use it to wait for dynamic page conditions that are not reflected in the tab title:
+
+```yaml
+expect:
+  type: TabWithState
+  scope: git_tab
+  expr: "document.readyState === 'complete'"
+```
 
 ## Window Conditions
 

@@ -14,7 +14,7 @@ The engine runs phases in order. Within each phase, it runs steps in order. Each
 1. **Execute** the action (click, type, extract, etc.)
 2. **Poll** the `expect` condition every 100ms
 3. If the condition passes before the timeout: advance to the next step
-4. If the timeout expires: check recovery handlers, then retry, skip, or fail
+4. If the timeout expires: check **recovery** handlers, then retry, skip, or fail
 
 That polling loop is the core of the engine. There are no `sleep` calls. The engine does not guess how long to wait — it waits exactly as long as the UI takes to reach the expected state, up to the declared timeout.
 

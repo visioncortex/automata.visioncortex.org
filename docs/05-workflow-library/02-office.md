@@ -5,6 +5,10 @@ sidebar_label: Office
 
 # Microsoft Office
 
+<video controls width="100%" style={{borderRadius: '8px', marginBottom: '1.5rem'}}>
+  <source src="/video/word-demo.mp4" type="video/mp4" />
+</video>
+
 Office applications (Word, Excel, PowerPoint) are native Win32/C++ applications with a custom UI framework that predates .NET. What makes them interesting for automation is that they expose unusually rich UIA automation IDs — `FontSize`, `TabHome`, `BackstageView` — on most interactive controls. This gives you stable, locale-independent selectors that survive version updates, which is the best-case scenario for any automation target.
 
 The key pattern: **use `id` selectors wherever possible.** Office exposes rich automation IDs (`FontSize`, `TabHome`, `BackstageView`) that survive version updates and locale changes. Name-based selectors are a fallback for elements without IDs.

@@ -9,14 +9,14 @@ The Windows UI Automation element tree is messy. A typical application window co
 
 No single property is reliably enough on its own to pinpoint the exact element you need. Selectors exist to let you combine every available signal — role, name, AutomationId, structural position, parent context, tree depth — into a precise, unambiguous address.
 
-The CSS-like syntax is a convenience. The point is precision.
+If you have written CSS before, the syntax will feel familiar — and intentionally so. CSS invented the ideas of `#id`, `.class`, `>` child, and `>>` descendant combinators as a way to pinpoint elements in a tree. This selector language borrows the same vocabulary, applied to the Windows UI Automation tree instead of the DOM.
 
 ## Semantic Properties, Not Visual Ones
 
 Selectors operate on Windows UI Automation properties — the accessibility layer baked into Windows. This is a critical design choice. UIA properties are stable:
 
 - **Role** (`button`, `edit`, `list item`) is determined by the control type, not its appearance
-- **Name** is the accessible name — what a screen reader would announce — not the pixel-level label text
+- **Name** is the accessible name — what a screen reader would announce — *usually* matches the on-screen text
 - **AutomationId** is a developer-assigned identifier that survives localization and theming
 
 A pixel-coordinate-based tool breaks when the window moves or the DPI changes. A selector-based tool does not — the element is the same element regardless of where it is rendered on screen.
@@ -28,11 +28,13 @@ A pixel-coordinate-based tool breaks when the window moves or the DPI changes. A
 | `title` | Alias for `name` on Window elements |
 | `id` | UIA AutomationId |
 
-## Compound Predicates: AND Logic
+## Compound Predicates
+
+### AND Logic
 
 A step can chain multiple predicates. All must match.
 
-```
+```python
 [role=button][name=Save]
 ```
 
@@ -46,7 +48,19 @@ Button[name=Open]
 
 is equivalent to `[role=button][name=Open]`.
 
-## String Operators: Right-Sizing the Match
+### OR Values
+
+The same UI element can have different role strings across Windows versions or application updates. OR values let one selector match both:
+
+```python
+[role=button|menu item]     # matches either role
+[name=OK|Yes]               # matches either button name
+[name~=Editor|Designer]     # name contains "Editor" OR "Designer"
+```
+
+This is precision in the other direction: instead of over-specifying and breaking on variation, you enumerate exactly the valid alternatives.
+
+## Match Operators
 
 Different situations call for different levels of specificity.
 
@@ -59,7 +73,7 @@ Different situations call for different levels of specificity.
 
 Use `=` when the name is stable and fully known. Use `~=` when the name includes a dynamic suffix (e.g., a document title with an unsaved-changes indicator). Use `^=` and `$=` together to pin both ends without quoting characters that vary across OS versions:
 
-```
+```python
 >> [role=button][name^=Don][name$=Save]
 ```
 
@@ -96,44 +110,33 @@ selector: ">> [role=edit][name=Filename]"
 
 Without `>>`, the selector would test the dialog element itself against `[role=edit]` — which would fail.
 
-## OR Values: Cross-Version Resilience
-
-The same UI element can have different role strings across Windows versions or application updates. OR values let one selector match both:
-
-```
-[role=button|menu item]     # matches either role
-[name~=Editor|Designer]     # name contains "Editor" OR "Designer"
-```
-
-This is precision in the other direction: instead of over-specifying and breaking on variation, you enumerate exactly the valid alternatives.
-
 ## Positional Modifier: `:nth`
 
 When multiple elements satisfy the same predicates, position disambiguates.
 
-```
+```python
 ToolBar > Group:nth(1)     # second Group (0-indexed) that is a direct child of ToolBar
 ```
 
-Use `:nth` when elements are structurally identical and position is the only distinguishing factor.
+`:first` is shorthand for `:nth(0)`. Use `:nth` when elements are structurally identical and position is the only distinguishing factor.
 
 ## Tree Navigation: `:parent` and `:ancestor`
 
-Sometimes the element you need to act on can only be identified through one of its children. Navigate up with `:parent` or `:ancestor(n)`.
+Sometimes the element you need to act on can only be identified through one of its children. Navigate up with `:parent` or `:ancestor(n)`. `:parent` is shorthand for `:ancestor(0)` — one level up.
 
-```
+```python
 >> [role=button][name=Settings]:parent
 ```
 
 Finds the Settings button, then returns its parent container. `:ancestor(n)` goes `n` levels up:
 
-```
+```python
 >> [role=button][name=Performance]:ancestor(2)
 ```
 
 You can continue the path after ascending:
 
-```
+```python
 >> [role=button][name=Performance]:parent > *:nth(9)
 ```
 
@@ -141,25 +144,28 @@ Finds the Performance button, moves to its parent, then selects the 10th child o
 
 ## Common Patterns
 
-**Pin by AutomationId when available — it is the most stable identifier:**
+#### Pin by AutomationId when available — it is the most stable identifier:
 ```yaml
 selector: ">> [id=SettingsPageAbout_New]"
 ```
 AutomationIds are set by the developer and survive label changes and localization.
 
-**Narrow by both role and name to eliminate ambiguity:**
-```
+#### Narrow by both role and name to eliminate ambiguity:
+
+```python
 >> [role=button][name=Save]
 ```
 Role alone is too broad; name alone may match non-interactive elements. Together they are unambiguous.
 
-**Handle dynamic titles with `~=`:**
-```
+#### Handle dynamic titles with `~=`:
+
+```python
 [name~=Notepad]
 ```
 Matches "Notepad", "Untitled - Notepad", "report.txt - Notepad" — any window whose title contains "Notepad".
 
-**Anchor on a container you can only find through a child:**
-```
+#### Anchor on a container you can only find through a child:
+
+```python
 >> [role=text][name=Status]:parent
 ```

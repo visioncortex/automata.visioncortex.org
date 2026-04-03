@@ -9,7 +9,7 @@ The shadow DOM is the engine's cached mirror of the live Windows UI element tree
 
 ## The Problem with Raw UIA
 
-Before we can appreciate the shadow DOM, it helps to understand what life without it looks like.
+Before we can explain the shadow DOM, it helps to understand what life without it looks like.
 
 Windows UI Automation is a cross-process RPC protocol. Every query — "find the button named Save inside this window" — is a round-trip to the target process. If you need to walk a path of nested elements (`window → panel → toolbar → button`), each step in that path is a separate cross-process call. An application with deep element trees can take hundreds of milliseconds just to resolve a single element path.
 

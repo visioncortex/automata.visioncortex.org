@@ -34,11 +34,14 @@ automata-agent --self-test
 
 Then run the bundled Notepad demo to confirm the workflow engine works end-to-end:
 
-```powershell
-# Windows 11
-ui-workflow $env:USERPROFILE\.ui-automata\workflows\win11\notepad\notepad_demo.yml
+#### Windows 11
 
-# Windows 10
+```powershell
+ui-workflow $env:USERPROFILE\.ui-automata\workflows\win11\notepad\notepad_demo.yml
+```
+#### Windows 10
+
+```powershell
 ui-workflow $env:USERPROFILE\.ui-automata\workflows\win10\notepad\notepad_demo.yml
 ```
 
@@ -56,7 +59,7 @@ automata-agent
 
 It scans ports 3001–4000 for a free one and prints a ready-to-paste config block:
 
-```
+```python
 automata-agent started
 host : 127.0.0.1
 port : 3001
@@ -115,12 +118,11 @@ ui-inspector
 
 Move the mouse over any element in any window. The inspector highlights the element under the cursor and prints its full ancestor chain to the terminal:
 
-```
-[desktop] ""  class=  id=
-   └─ [window] "Untitled - Notepad"  class=Notepad  id=
-      └─ [pane] ""  class=EVERYTHING  id=
-         └─ [document] "Text editor"  class=RichEditD2DPT  id=
-            └─ [edit] "Text editor"  class=  id=  value=Hello  enabled=true  rect=(12,52,1240,720)
+```python
+[desktop] "Desktop 1" class=#32768 id=
+   └─ [window] "Untitled - Notepad" class=Notepad id=
+      └─ [pane] "" class=NotepadTextBox id=
+         └─ [document] "Text editor" class=RichEditD2DPT id= value= enabled=true rect=(0,0,400,200)
 ```
 
 Every line shows the element's role, name, class, AutomationId, value, and bounding rect — exactly what you need to write a selector. Press `Ctrl-C` to exit.
@@ -133,10 +135,10 @@ list-windows
 
 To test a selector before committing it to a workflow, ask Claude to run `desktop find_elements` against the window. It will return every match with its role, name, bounds, and full ancestor chain.
 
-Then dump the full UIA element tree for a window by its HWND.
+You can also dump the full UIA element tree for a window by its HWND.
 
 ```powershell
-element-tree 0x1a2b3c
+element-tree 0x1234ab
 ```
 
 ## Step 4 — Your First Workflow
@@ -326,7 +328,7 @@ After each run, a detailed structured log is saved to:
 $env:USERPROFILE\.ui-automata\logs\notepad_hello\20260403T152954.log
 ```
 
-```log
+```js
 [2026-04-03T14:29:54.074Z] [INFO] log → C:\Users\chris\.ui-automata\logs\notepad_hello\20260403T152954.log
 [2026-04-03T14:29:54.568Z] [INFO] launched 'notepad.exe' pid=20828
 [2026-04-03T14:29:54.568Z] [INFO] launch: waiting for notepad.exe window (strategy=NewWindow, timeout=5s)

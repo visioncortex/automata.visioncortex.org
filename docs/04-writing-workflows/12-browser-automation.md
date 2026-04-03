@@ -58,6 +58,15 @@ phases:
 
 After mounting, subsequent phases can use `edge` and `git_tab` as scope without re-mounting.
 
+Use `TabWithState` when the title is not enough to confirm the page is ready — for example, waiting for a JS-heavy SPA to finish rendering:
+
+```yaml
+expect:
+  type: TabWithState
+  scope: git_tab
+  expr: "document.readyState === 'complete'"
+```
+
 ## Clicking Links That Open New Tabs
 
 CDP `.click()` dispatches a **synthetic event** — it does not count as a user gesture. Edge blocks pop-ups and new-tab navigations triggered by synthetic events.

@@ -73,7 +73,7 @@ The selector `>> [role=button][name=Save]` is evaluated within the `editor` anch
 
 `Browser` and `Tab` are specialized anchor types for controlling a web browser. They connect via CDP (Chromium DevTools Protocol) and integrate with the UIA window for actions that require a real user gesture.
 
-#### `Browser`
+### `Browser`
 
 Represents a running browser instance. The engine connects to Edge via CDP on mount and holds the connection for the phase.
 
@@ -85,7 +85,7 @@ anchors:
 
 A `Browser` anchor is always a top-level anchor — it has no `parent`. It behaves like a `Root` anchor in that it is registered on first mount and held for the rest of the workflow. It also serves as the UIA scope for actions targeting the browser window itself (address bar, toolbar, Downloads panel).
 
-#### `Tab`
+### `Tab`
 
 Represents a single browser tab. A `Tab` anchor must have a `Browser` anchor as its `parent`.
 
@@ -134,7 +134,7 @@ Root and Session anchors can be restricted to a specific process:
 anchors:
   my_app:
     type: Root
-    process: myapp        # matches any window of myapp.exe
+    process: myapp              # matches any window of myapp.exe
     selector: "*"
   pinned:
     type: Root

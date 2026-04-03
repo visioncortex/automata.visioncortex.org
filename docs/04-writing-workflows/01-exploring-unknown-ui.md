@@ -29,11 +29,10 @@ Move the mouse over any element in any window. The inspector:
 - **Prints the full ancestor chain** to the terminal, from the desktop root down to the hovered element, cleared and refreshed on every move
 
 ```
-[desktop] ""  class=  id=
-   └─ [window] "Untitled - Notepad"  class=Notepad  id=
-      └─ [pane] ""  class=EVERYTHING  id=
-         └─ [document] "Text editor"  class=RichEditD2DPT  id=
-            └─ [edit] "Text editor"  class=  id=  value=Hello  enabled=true  rect=(12,52,1240,720)
+[desktop] "Desktop 1" class=#32768 id=
+   └─ [window] "Untitled - Notepad" class=Notepad id=
+      └─ [pane] "" class=NotepadTextBox id=
+         └─ [document] "Text editor" class=RichEditD2DPT id= value= enabled=true rect=(0,0,400,200)
 ```
 
 Every line shows the element's role, name, class, AutomationId, value, enabled state, and bounding rect — exactly the properties you need to write a selector.
@@ -57,7 +56,7 @@ Output:
 
 ```
 --- Window #1 ---
-  hwnd    : 0x1a2b3c
+  hwnd    : 0x1234ab
   process : notepad (pid 4812)
   title   : Untitled - Notepad
   type    : window
@@ -75,7 +74,7 @@ The MCP equivalent for agents: `desktop list_windows`.
 Dump the full UIA element tree for a window by its HWND. Output is YAML.
 
 ```powershell
-element-tree 0x1a2b3c
+element-tree 0x1234ab
 ```
 
 This walks the entire subtree and prints every element with its role, name, class, AutomationId, and bounds. For a complex application this can be large — pipe through a pager or redirect to a file.

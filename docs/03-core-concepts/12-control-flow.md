@@ -13,6 +13,10 @@ Workflows are not always linear. Preconditions allow phases to be skipped when a
 
 ## Preconditions
 
+Preconditions work at two levels: **phase** and **step**.
+
+### Phase preconditions
+
 A phase can declare a `precondition`. If the condition is false when the phase is reached, the phase is skipped entirely and execution continues with the next phase. This is not an error.
 
 ```yaml
@@ -32,6 +36,26 @@ A phase can declare a `precondition`. If the condition is false when the phase i
 ```
 
 If no dialog is present when `close_dialog` is reached, the phase is skipped cleanly.
+
+### Step preconditions
+
+Individual steps can also declare a `precondition`. If false, the step is skipped and execution continues with the next step in the same phase — not an error.
+
+```yaml
+- intent: dismiss warning dialog if present
+  precondition:
+    type: DialogPresent
+    scope: main_window
+  action:
+    type: Click
+    scope: main_window
+    selector: ">> [role=button][name=OK]"
+  expect:
+    type: DialogAbsent
+    scope: main_window
+```
+
+Step preconditions are useful for optional cleanup steps that may or may not be needed depending on what happened earlier in the phase.
 
 ## Skipping a Phase vs. Failing
 
@@ -171,7 +195,7 @@ Jump to a terminal phase to exit early without error:
   flow_control:
     condition:
       type: EvalCondition
-      expr: "var.item_count == 0"
+      expr: "output.item_count == 0"
     go_to: done
 ```
 
@@ -184,8 +208,8 @@ A phase named `finally` runs unconditionally at the end of a workflow, whether i
   steps:
     - intent: close the application
       action:
-        type: Execute
-        command: "taskkill /IM notepad.exe /F"
+        type: CloseWindow
+        scope: main_window
       expect: { type: Always }
 ```
 
