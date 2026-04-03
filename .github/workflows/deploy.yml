@@ -11,33 +11,38 @@ concurrency:
   group: automata.visioncortex.org
   cancel-in-progress: false
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           key: ${{ github.repository }}-${{ github.ref_name }}
-          path: |
-            ~/.npm
+          path: ~/.npm
 
       - id: git-log
         run: echo "message=$(git log --no-merges -1 --oneline)" >> $GITHUB_OUTPUT
 
-      - run: echo $GITHUB_OUTPUT
-
       - run: bash build.sh
 
-      - uses: JamesIves/github-pages-deploy-action@v4
+      - uses: actions/upload-pages-artifact@v3
         with:
-          branch: gh-pages
-          folder: dist
-          clean: false
-          clean-exclude: preview
+          path: dist
+
+      - id: deployment
+        uses: actions/deploy-pages@v4
