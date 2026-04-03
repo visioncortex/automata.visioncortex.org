@@ -7,7 +7,7 @@ sidebar_label: Actions in Depth
 
 Actions are the verbs of a workflow. Each step executes exactly one action and then waits for its `expect` condition. This page covers every action type with practical examples drawn from real workflows.
 
-For a quick reference of all action types, see [Actions](../03-core-concepts/07-actions.md).
+For a quick reference of all action types, see [Actions](/docs/core-concepts/actions).
 
 ## Mouse Actions
 
@@ -286,7 +286,7 @@ Like `ClickForegroundButton` but matches any element type, not just buttons.
 
 ### `Extract`
 
-Reads an attribute from a matched element and stores it under a key. See [Extracting Data](./06-extracting-data) for full details.
+Reads an attribute from a matched element and stores it under a key. See [Extracting Data](../extracting-data) for full details.
 
 ```yaml
 - intent: read the current font size

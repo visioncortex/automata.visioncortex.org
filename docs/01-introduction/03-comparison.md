@@ -25,7 +25,7 @@ PyAutoGUI takes screenshots and clicks at pixel coordinates (the same fundamenta
 
 ## vs. Vision-Based Agents (Computer Use, etc.)
 
-Vision-based agents are useful for exploration and for tasks that genuinely require visual reasoning (reading a chart, identifying an image, handling a UI that has no UIA support at all). They are not the right tool for repeated execution: they are slow, expensive per run, fragile to layout changes, and produce no structured audit trail. See [Why not vision?](./02-why-not-vision) for a detailed breakdown.
+Vision-based agents are useful for exploration and for tasks that genuinely require visual reasoning (reading a chart, identifying an image, handling a UI that has no UIA support at all). They are not the right tool for repeated execution: they are slow, expensive per run, fragile to layout changes, and produce no structured audit trail. See [Why not vision?](../why-not-vision) for a detailed breakdown.
 
 ## Summary
 

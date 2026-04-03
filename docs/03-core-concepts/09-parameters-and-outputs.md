@@ -17,7 +17,7 @@ params:
     description: The term to search for
   - name: output_dir
     description: Directory to write results to
-    default: "C:\\Users\\Public\\Documents"
+    default: "{env.USERPROFILE}\\Documents\\"
 ```
 
 | Field | Required | Description |
@@ -25,6 +25,12 @@ params:
 | `name` | yes | Parameter name; referenced as `{param.name}` |
 | `description` | no | Human-readable description |
 | `default` | no | Default value; omit to make the parameter required |
+
+Default values support environment variable expansion via `{env.VAR_NAME}`. This is useful for user-specific paths that should not be hardcoded:
+
+```yaml
+default: "{env.USERPROFILE}\\Documents\\"
+```
 
 Parameters without a `default` must be supplied at runtime. Missing required parameters are a fatal error at workflow start.
 
@@ -53,6 +59,8 @@ Use `{param.name}` in any string field of the workflow YAML: selectors, intent s
   expect:
     type: ExecSucceeded
 ```
+
+`{workflow.dir}` is a built-in variable that expands to the directory containing the workflow YAML file itself — not the process working directory. Use it to reference scripts or assets that live alongside the workflow, so paths stay correct regardless of where `ui-workflow` is invoked from.
 
 Substitution happens before YAML parsing, so parameters can appear in selectors as well:
 
@@ -83,9 +91,9 @@ Use the `Extract` action to read a value from a UI element. Use `EvalCondition` 
 - intent: read the export file path
   action:
     type: Extract
+    key: saved_file
     scope: dialog
     selector: ">> [role=edit][name=Filename]"
-    key: saved_file
     attribute: value
   expect:
     type: EvalCondition
@@ -95,23 +103,23 @@ Use the `Extract` action to read a value from a UI element. Use `EvalCondition` 
 Use `Eval` to compute a value:
 
 ```yaml
-- intent: build the output path
+- intent: compute full save path
   action:
     type: Eval
-    key: output_path
-    expr: "{param.base_dir}\\{output.app_name}_export.csv"
+    key: full_path
+    expr: "param.output_dir + output.saved_file"
   expect:
     type: Always
 ```
 
-Use `WriteOutput` to write a value directly without computation:
+Use `WriteOutput` to write output values to a file:
 
 ```yaml
-- intent: record the final status
+- intent: write todo items to a file
   action:
     type: WriteOutput
-    key: status
-    value: "complete"
+    key: todo_items
+    path: "{param.output_dir}todos.csv"
   expect:
     type: Always
 ```
@@ -122,10 +130,12 @@ Once written, an output key is available as `{output.key}` in all subsequent ste
 
 ## Passing Parameters at Runtime
 
-From the CLI:
+From the CLI, use `--` to separate the engine's own flags from the workflow parameters. Everything after `--` is passed through to the workflow rather than being interpreted by the engine — the same convention used by Cargo and many Unix tools:
 
 ```powershell
-ui-workflow my_workflow.yml --param search_term=quarterly_report --param output_dir=C:\Reports
+ui-workflow my_workflow.yml -- --search_term quarterly_report --output_dir C:\Reports
 ```
+
+Without `--`, flags like `--search_term` would be parsed by the engine itself and produce an unknown-flag error. The `--` acts as a boundary: "stop processing my flags here, pass the rest to the workflow."
 
 From the MCP tool, pass a `params` map in the `run_workflow` call.

@@ -107,7 +107,7 @@ A flow-control phase is a conditional jump. It has no steps and no anchor lifecy
     go_to: process_item
 ```
 
-If the condition is true, execution jumps to the named phase. If false, execution falls through to the next phase in order. See [Control Flow](./12-control-flow) for loop patterns.
+If the condition is true, execution jumps to the named phase. If false, execution falls through to the next phase in order. See [Control Flow](../control-flow) for loop patterns.
 
 ## Subflow Phases
 

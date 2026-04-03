@@ -24,7 +24,7 @@ const FeatureList = [
         All access modes supported: UIA, DOM, and pure vision.
       </>
     ),
-    video: '/video/control-panel.mp4',
+    video: '/video/combined-demo.mp4',
   },
   {
     title: 'Agent-Native',

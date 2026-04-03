@@ -119,7 +119,7 @@ The ancestor chain shows the exact structural path — useful for deciding where
 
 ## Step 4: Identify Anchor Boundaries
 
-With the tree in hand, apply the rules from [Choosing Anchors](./04-declaring-anchors):
+With the tree in hand, apply the rules from [Choosing Anchors](../declaring-anchors):
 
 - The main window: `Root` anchor
 - Stable panels that stay alive across the workflow: `Stable` anchors, children of the root

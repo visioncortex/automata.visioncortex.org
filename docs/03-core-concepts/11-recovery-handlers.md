@@ -34,8 +34,8 @@ Each handler has three fields:
 
 | Field | Description |
 |---|---|
-| `trigger` | Any [Condition](./08-conditions) — checked after a step timeout |
-| `actions` | List of [Actions](./07-actions) to execute when the trigger fires |
+| `trigger` | Any [Condition](../conditions) — checked after a step timeout |
+| `actions` | List of [Actions](../actions) to execute when the trigger fires |
 | `resume` | What the executor does after the actions complete |
 
 ## Trigger Conditions

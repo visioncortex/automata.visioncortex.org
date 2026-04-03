@@ -57,7 +57,7 @@ Reads an attribute from one or more matched elements and stores it in an output 
 
 ### Eval
 
-Computes an expression and stores the result in an output variable. See [Expressions](./10-expressions) for the full syntax.
+Computes an expression and stores the result in an output variable. See [Expressions](../expressions) for the full syntax.
 
 ### WriteOutput
 

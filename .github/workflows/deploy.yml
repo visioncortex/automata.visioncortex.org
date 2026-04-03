@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
 
       - uses: actions/cache@v3
         with:
@@ -33,7 +33,7 @@ jobs:
 
       - run: echo $GITHUB_OUTPUT
 
-      - run: sh build.sh
+      - run: bash build.sh
 
       - uses: JamesIves/github-pages-deploy-action@v4
         with:

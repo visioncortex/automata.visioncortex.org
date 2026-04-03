@@ -55,7 +55,7 @@ Optional. Evaluated before the action. If false, the step is **skipped** — not
 
 ### `action`
 
-The action to perform. See [Actions](./07-actions) for the full list.
+The action to perform. See [Actions](../actions) for the full list.
 
 ### `fallback`
 
@@ -77,7 +77,7 @@ Optional. An alternative action run when `expect` times out on the primary actio
 
 ### `expect`
 
-The condition that must become true after the action. Polled every 100 ms until satisfied or the timeout elapses. See [Conditions](./08-conditions) for the full list.
+The condition that must become true after the action. Polled every 100 ms until satisfied or the timeout elapses. See [Conditions](../conditions) for the full list.
 
 ### `timeout`
 

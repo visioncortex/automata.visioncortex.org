@@ -58,7 +58,7 @@ OS-specific workflows (those that differ between Win10 and Win11) live under `wi
 Run a workflow directly with the executor:
 
 ```
-ui-automata run workflows/win11/notepad/notepad_demo.yml --param text="Hello"
+ui-automata \workflows\win11\notepad\notepad_demo.yml -- --text 'Hello'
 ```
 
 Or call it as a subflow from your own workflow:

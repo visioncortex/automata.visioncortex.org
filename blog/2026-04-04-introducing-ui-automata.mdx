@@ -22,23 +22,21 @@ AI agents can be that colleague. The problem is the interface.
 
 ## Why Windows Desktop Automation Is Hard
 
-The Windows desktop is genuinely difficult to automate programmatically. Unlike the web (where the DOM is structured, accessible, and designed to be read by code), the Windows desktop is a patchwork of UI frameworks: Win32, MFC, WPF, UWP, WinUI 3, embedded web views, custom renderers. Each one exposes its element tree differently. Elements can appear, disappear, and rebuild mid-interaction. Dialogs pop up unexpectedly. Applications behave differently across OS versions, display scaling settings, and language packs.
+The Windows desktop is genuinely difficult to automate programmatically. Unlike the web (where the DOM is structured and designed to be read by code), the Windows desktop is a patchwork of UI frameworks built over decades: Win32, MFC, WPF, UWP, WinUI 3, embedded web views, custom renderers. Each one exposes its internals differently. Dialogs pop up unexpectedly. Apps behave differently across OS versions, display scaling, and language packs. There is no single standard to rely on.
 
-Vision-based computer use is a compelling answer to this complexity. Rather than trying to understand every framework, you just look at the screen. It works, and for tasks that require genuine visual reasoning (reading a chart, handling a UI with no accessibility support at all) it remains the right tool.
+Vision-based computer use is a compelling answer to this complexity. Rather than trying to understand every framework, you just look at the screen. It works, and for tasks that require genuine visual reasoning it remains the right tool.
 
-But for automation at any scale, it carries real costs. Each step is a round-trip to an inference API. Pixel coordinates shift when the window moves or the DPI changes. Every intermediate state the agent needs to observe is a separate inference call. And a sequence of screenshots is not an auditable record: when something goes wrong, there is no structured trace to reason about.
+But for automation at any scale, it carries real costs. Each step is a round-trip to an inference API. Pixel coordinates shift when the window moves or the display resolution changes. And a sequence of screenshots is not an auditable record — when something goes wrong, there is no structured trace to diagnose.
 
 UI Automata takes a complementary approach: use the semantic layer that is already there.
 
-## A Declarative Workflow Engine
+## The Workflow YAML: Shell Scripting for Windows GUI
 
 <video controls width="100%" style={{borderRadius: '8px', marginBottom: '2rem'}}>
   <source src="/video/notepad-demo.mp4" type="video/mp4" />
 </video>
 
-Instead of asking an AI model to guess where to click from pixels, UI Automata gives agents a structured interface to the Windows UI through Windows UI Automation (UIA): the same accessibility layer that screen readers use. UIA queries are local, return semantic data, and take milliseconds.
-
-You describe what should happen in YAML. The engine handles the rest.
+Think of a workflow YAML file as the shell script for the Windows desktop. Where a shell script says "run this command, check the exit code, pipe the output to the next step" — a workflow YAML says "click this button, wait for this dialog, extract this value."
 
 ```yaml
 - intent: click the Save button
@@ -52,76 +50,70 @@ You describe what should happen in YAML. The engine handles the rest.
   timeout: 10s
 ```
 
-Every step has three parts: an **action** (what to do), an **expect** (what state the UI should be in afterwards), and optionally a **recovery** (what to do if something unexpected happens). The engine executes the action, then polls the expect condition every 100ms. When it passes, it moves on. When the timeout expires, it checks recovery handlers before failing cleanly.
+Every step has three parts: an **action** (what to do), an **expect** (what state the UI should be in afterwards), and optionally a **recovery** (what to do if something unexpected happens). The engine executes the action, then watches the UI until the expected state appears. If it does not appear in time, it checks recovery handlers before failing cleanly.
 
 No sleeps. No guessing. No silent failures.
 
-## The Innovation: CSS-Like Selectors for Windows UI
+## Selectors: CSS for Windows UI
 
-The Windows UIA element tree is messy. A typical application window contains hundreds of elements: nested panels, unlabelled containers, toolbars with identical-looking buttons, lists where every row has the same role and no name. No single property is reliably enough on its own to identify the exact element you need.
+If the workflow YAML is the shell script, selectors are the file paths. They are how you point to the exact UI element you want to act on.
 
-We built a CSS-like selector language that lets you combine every available signal (role, name, AutomationId, structural position, parent context, tree depth) into a precise, unambiguous address.
+The Windows UI element tree is messy — a typical app window has hundreds of nested elements, many with no name or identical-looking labels. A single property is rarely enough to pin down the right one. We built a CSS-like selector language that lets you combine every available signal into a precise address:
 
 ```python
 >> [role=button][name=Save]                    # role AND name
->> [id=TabListView] > [role=tab item]:first    # first child of the tab list
->> [role=button][name=Settings]:parent         # navigate up from a known child element
+>> [id=TabListView] > [role=tab item]:first    # first tab in a specific list
+>> [role=button][name=Settings]:parent         # the container holding this button
 >> [role=dialog][name='Confirm Save As'] >> [role=button][name=Yes]  # button inside a specific dialog
 ```
 
-This is not cosmetic. It solves real problems:
+Crucially, selectors target semantic properties (what an element *is*) not pixel coordinates (where it happens to be *drawn*). They survive window resizes, display scaling changes, theme changes, and most app updates. A selector that worked last week works today.
 
-- `[name^=Don][name$=Save]` matches "Don't Save" whether the apostrophe is `U+0027` or `U+2019` (right single quotation mark, common in newer Windows). An exact match would fail on one of them.
-- `:parent` and `:ancestor(n)` let you anchor on a row container you can only identify through a landmark element inside it (a common pattern in dense professional applications).
-- `>` vs `>>` pins you to a specific tree depth. When there are nested toolbars, `> ToolBar` means the one at the top level, not whichever one `>>` finds first.
+## The Shadow DOM: React in Reverse
 
-Selectors operate on UIA semantic properties (role, accessible name, AutomationId), not pixel coordinates. They survive resolution changes, theme changes, localization, and most application updates. A selector that worked last week still works today.
+Querying Windows UI Automation naively is slow — every element lookup is a cross-process round-trip, like making a network request just to read a variable. A 20-step workflow that re-queries from scratch on every step spends most of its time waiting, not working.
 
-## Under the Hood: The Shadow DOM
+UI Automata solves this with what we call the **shadow DOM**: a cached map of the live UI. Think of it like a database connection pool — instead of opening a new connection for every query, you keep a handle and reuse it. The engine resolves each element once and holds onto it. Subsequent steps that reference the same element are nearly instant.
 
-Windows UI Automation is a cross-process RPC protocol. Every element query is a round-trip to the target process. Walk a path of nested elements (window → panel → toolbar → button) and each step is a separate cross-process call. A workflow naively issuing fresh UIA queries on every step can spend most of its time waiting for element resolution, not doing work.
-
-UI Automata solves this with what we call the **shadow DOM**: a cached mirror of the live element tree. The engine resolves each anchor once, records the live element handle, and reuses it for every subsequent step. No re-traversal. A cached handle lookup is effectively free compared to a cross-process UIA query.
-
-The shadow DOM also handles identity. When a Root anchor is first resolved, the engine records the exact HWND (the OS-level window handle) of the matched window. Every subsequent resolution goes directly to that HWND, bypassing the selector entirely. If the application changes its title during navigation, the anchor does not drift. If a new window with a similar title opens, it is ignored. A Root anchor is not "the window that currently matches this selector." It is *this specific window, forever*.
-
-When handles go stale (because a panel reloaded or a toolbar refreshed), the engine walks up the element tree to the nearest live ancestor and re-queries downward from there. The anchor is silently re-resolved, and the step proceeds as if nothing happened.
-
-This is the inverse of React's virtual DOM. React maintains a virtual tree to efficiently *write to* a UI it controls. The shadow DOM maintains a virtual tree to efficiently *read from* a UI it does not control.
+The shadow DOM also solves identity. When you first target a window, the engine records its exact OS-level ID (the HWND). From that point on, all interactions go directly to that specific window — not "whatever window currently has this title." If the app renames its title mid-flow, or another window with a similar name opens, the engine stays locked to the right one.
 
 ## Universal Coverage
 
-Windows applications are not a single thing. A modern Windows machine might run Win32 apps from 1998, MFC-based industrial software, WPF enterprise tools, UWP apps hosted by ApplicationFrameHost, WinUI 3 apps with tabbed interfaces, terminal windows, and a web browser, all at once.
+<video controls width="100%" style={{borderRadius: '8px', marginBottom: '1.5rem'}}>
+  <source src="/video/control-panel.mp4" type="video/mp4" />
+</video>
+
+Windows applications are not a single thing. A modern machine might run a Win32 app from 1998 alongside a WinUI 3 app from last year, a legacy MFC tool, and a web browser — all at once.
 
 UI Automata covers all of them.
 
 | Toolkit | Notes |
 |---|---|
-| Win32 | Classic API; dialogs are real child windows; stable across OS versions |
-| MFC | Dense, deeply nested UIA trees; shadow DOM caching makes this viable |
-| WPF | Named AutomationIds on most controls; virtualizing panels require `Invoke` |
-| UWP | Hosted by ApplicationFrameHost; anchor by window title, not process name |
-| WinUI 3 | Direct process; tabbed interfaces; inline prompts instead of child dialogs |
-| Web browser | CDP for page content; UIA for browser chrome and download flows |
+| Win32 | Classic API; stable and well-supported |
+| MFC | Dense, deeply nested trees; handled by shadow DOM caching |
+| WPF | Rich automation IDs on most controls |
+| UWP | Windows Settings, Store apps — anchor by title, not process name |
+| WinUI 3 | Win11 Notepad, Explorer — tabbed interfaces, inline prompts |
+| Web browser | Page content via CDP; browser chrome via UIA |
 
-Where UIA is unavailable (terminal windows, some custom renderers), the engine can fall back to pure vision. Vision and structured automation are not mutually exclusive; they complement each other. The typical pattern: use vision during authoring to explore the UI and draft selectors, then use UIA in workflow runs.
+Where UIA is unavailable, agents can fall back to pure vision. Vision and structured automation complement each other — use vision to explore and draft, then use structured automation to execute reliably at scale.
 
 ## Built for AI Agents
 
-UI Automata is not a scripting framework that an agent happens to use. It is designed from the ground up to be the interface between an agent and the Windows desktop.
+UI Automata is not a scripting framework that agents happen to use. It is designed from the ground up as the interface between an agent and the Windows desktop.
 
-Every step carries an `intent` field: a human-readable description of what it is trying to do. The engine logs every step with its outcome, producing a structured trace the agent can read and reason about. When something goes wrong, the trace tells the agent exactly what state the UI was in at the moment of failure, which recovery handlers ran, and what they found.
+Every step carries an `intent` field — a plain-English description of what it is trying to do. The engine logs every step with its outcome, giving the agent a full structured trace to read and reason about. When something goes wrong, the trace tells the agent exactly what state the UI was in at the moment of failure.
 
-The MCP interface exposes everything an agent needs:
+The MCP interface gives an agent everything it needs:
 
 - `desktop`: inspect live element trees and test selectors against any window
 - `app`: list installed applications and launch them
 - `browser`: CDP page inspection and navigation
 - `workflow`: run a workflow file, receive structured output
 - `vision`: OCR and layout for windows that lack UIA support
-- Schema reference and built-in linter: allow agents to author workflow scripts proficiently
+- Schema and linter: allow agents to author workflow scripts proficiently
 
-An agent can explore an unfamiliar UI, author workflow steps interactively, run them immediately, observe the result, and promote working steps into a reusable workflow file. The entire loop (explore, script, verify, save) happens in a conversation. No separate GUI, no visual designer, no specialist required.
+An agent can explore an unfamiliar UI, author steps interactively, run them immediately, and promote working steps into a reusable workflow file. The entire loop — explore, script, verify, save — happens in a conversation. No separate GUI, no visual designer, no specialist required.
 
 ## Industrial-Grade Applications
 
@@ -129,11 +121,9 @@ An agent can explore an unfamiliar UI, author workflow steps interactively, run 
   <source src="/video/mastercam-demo.mp4" type="video/mp4" />
 </video>
 
-One of the hardest problems in desktop automation is professional software: CAD tools, legacy ERP systems. These applications have dense, deeply nested UIA trees with hundreds of elements per panel, virtualizing lists where off-screen rows have no bounding box, and toolbars with dozens of identical-looking buttons distinguishable only by AutomationId.
+Professional desktop software — CAD tools, ERP systems, simulation suites — is where most automation approaches hit a wall. These apps have deeply nested UI structures, lists where off-screen items are invisible to standard queries, and toolbars where dozens of buttons look identical to anything but their internal ID.
 
-This is exactly where traditional automation tools break down. Pixel-coordinate approaches fail because nothing is stable. Imperative scripts fail because the application state is too complex to reason about procedurally.
-
-UI Automata's combination of precise selectors, shadow DOM caching, and declarative recovery handling makes these applications tractable. The `Invoke` action calls `IInvokePattern::Invoke()` directly (bypassing the bounding box entirely), so it works on off-screen list rows and toolbar buttons that `Click` cannot reach. The `:parent` and `:ancestor` navigators let you anchor on a row container you can only identify through an element inside it.
+UI Automata handles these because it was designed with them in mind. The `Invoke` action activates elements directly through the accessibility interface, bypassing the need for a visible bounding box entirely. The `:parent` and `:ancestor` navigators let you locate a container by identifying a landmark element inside it — the pattern you need when the row you want to click has no unique label of its own.
 
 ## What We Are Releasing Today
 
@@ -141,8 +131,8 @@ We are releasing the initial build of UI Automata today, including:
 
 - The workflow engine and YAML format
 - The MCP server (`automata-agent`) for Claude Code and Claude Desktop
-- `ui-inspector` and `list-windows` CLI tools for interactive UI exploration
-- The workflow library: ready-to-use workflows for common Windows applications (Notepad, Explorer, Windows Settings, Control Panel, Word, browser)
+- `ui-inspector` and other CLI tools for interactive UI exploration
+- The workflow library: reference workflows for common Windows applications (Notepad, Explorer, Windows Settings, Control Panel, Word, browser)
 - Comprehensive documentation at [automata.visioncortex.org](https://automata.visioncortex.org)
 - Source code at [visioncortex/ui-automata](https://github.com/visioncortex/ui-automata)
 
