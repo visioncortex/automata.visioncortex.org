@@ -7,6 +7,14 @@ sidebar_label: Why not vision?
 
 Vision-based computer use (where an AI model looks at screenshots and decides where to click) is the obvious first approach to desktop automation. It works, up to a point. ui-automata takes a different path, and the reasons are worth understanding.
 
+## The Richness of UIA
+
+When a developer builds a Windows application, they wire up accessibility metadata as part of the UI framework: control types, accessible names, AutomationIds, enabled states, value patterns, selection states, tree structure. This is not incidental — it is the semantic layer the developer designed into the application. A button knows it is a button. A list item knows its index and its content. An edit field knows its current value.
+
+A vision model looking at a screenshot discards all of this. It compresses a rich semantic graph into pixels and then tries to recover intent from visual inference. The information was there, structured and machine-readable, and it was thrown away.
+
+ui-automata's philosophy is to use all of it. The element's role, its name, its AutomationId, its position in the tree, its state — every property is available to a selector, to a condition, to a recovery handler. Automation built on this layer is not guessing. It is working with the same model of the UI that the application itself is built on.
+
 ## Speed
 
 Each vision step requires a screenshot, a round-trip to an inference API, and time to parse the response. Windows UI Automation queries are local and take milliseconds. A workflow that opens a file, reads three fields, and closes the dialog might need 8–10 steps. With UIA, that is under a second total. With vision, the time adds up fast — and inference models, while improving, will always carry that structural overhead.

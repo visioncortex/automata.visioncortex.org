@@ -1,8 +1,8 @@
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'UI Automata',
-  tagline: 'Windows UI automation for AI agents',
-  url: 'https://ui-automata.visioncortex.org',
+  tagline: 'Windows Desktop Automation for AI Agents',
+  url: 'https://automata.visioncortex.org',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'throw',
@@ -46,8 +46,8 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Getting Started',
-              to: '/blog/getting-started',
+              label: 'Installation',
+              to: '/docs/installation/desktop-setup/',
             },
             {
               label: 'Core Concepts',
