@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkui_automata=globalThis.webpackChunkui_automata||[]).push([[7472],{5513(t){t.exports=JSON.parse('{"title":"All Posts","items":[{"title":"Windows Desktop Automation for AI Agents","permalink":"/blog/introducing-ui-automata"},{"title":"Getting Started with UI Automata","permalink":"/blog/getting-started"}]}')}}]);

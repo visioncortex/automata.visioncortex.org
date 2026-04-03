@@ -1,0 +1,1 @@
+"use strict";(globalThis.webpackChunkui_automata=globalThis.webpackChunkui_automata||[]).push([[6830],{2474(a){a.exports=JSON.parse('{"label":"news","permalink":"/blog/tags/news","allTagsPath":"/blog/tags","count":1}')}}]);
