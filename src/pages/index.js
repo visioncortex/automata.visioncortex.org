@@ -29,8 +29,8 @@ function HomepageHeader() {
             &nbsp;&nbsp;
             <Link
               className="button button--primary button--lg"
-              to="/docs/installation/desktop-setup/">
-              Install
+              to="/blog/getting-started">
+              Getting Started
             </Link>
           </div>
         </div>

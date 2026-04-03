@@ -146,7 +146,7 @@ In **Claude Code** (HTTP mode), the workflow library is exposed as MCP resources
 
 In **Claude Desktop** (stdio mode), use the built-in resources tool to fetch them:
 
-> *"Use the resources tool to read CLAUDE.md and AGENT.md from the ui-automata server before we start."*
+> *"Use the resources tool to read CLAUDE.md and AGENT.md from ui-automata before we start."*
 
 Either way, a Claude that has read the library writes better workflows faster and makes fewer avoidable mistakes.
 

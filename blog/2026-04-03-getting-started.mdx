@@ -133,6 +133,12 @@ list-windows
 
 To test a selector before committing it to a workflow, ask Claude to run `desktop find_elements` against the window. It will return every match with its role, name, bounds, and full ancestor chain.
 
+Then dump the full UIA element tree for a window by its HWND.
+
+```powershell
+element-tree 0x1a2b3c
+```
+
 ## Step 4 — Your First Workflow
 
 With the element tree in hand, writing the workflow is straightforward. Here is a minimal example that opens Notepad, types a line, and saves the file:
@@ -348,7 +354,7 @@ Open it to inspect exactly what happened on every step — actions taken, condit
 
 Ask Claude to read the library context before starting any automation task:
 
-> *"Read the CLAUDE.md and AGENT.md from the ui-automata resource list before we start."*
+> Read the CLAUDE.md and AGENT.md from the ui-automata resource list before we start.
 
 ## Where to Go Next
 

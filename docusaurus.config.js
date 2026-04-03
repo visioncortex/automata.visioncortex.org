@@ -46,11 +46,11 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Installation',
+              label: 'Install',
               to: '/docs/installation/desktop-setup/',
             },
             {
-              label: 'Core Concepts',
+              label: 'Concepts',
               to: '/docs/core-concepts/workflow-engine/',
             },
           ],
