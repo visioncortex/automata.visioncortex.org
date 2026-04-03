@@ -35,7 +35,7 @@ The hard problems in Windows automation are not the clicks and keystrokes. They 
 ## How the Library Is Organized
 
 ```
-workflow-library/
+workflows/
   win10/
     notepad/
     explorer/
@@ -58,7 +58,7 @@ OS-specific workflows (those that differ between Win10 and Win11) live under `wi
 Run a workflow directly with the executor:
 
 ```
-ui-automata run workflow-library/win11/notepad/notepad_demo.yml --param text="Hello"
+ui-automata run workflows/win11/notepad/notepad_demo.yml --param text="Hello"
 ```
 
 Or call it as a subflow from your own workflow:
@@ -66,7 +66,7 @@ Or call it as a subflow from your own workflow:
 ```yaml
 phases:
   - name: search_store
-    subflow: ../workflow-library/microsoft_store/microsoft_store_search.yml
+    subflow: ../workflows/microsoft_store/microsoft_store_search.yml
     params:
       search_term: "{param.app_name}"
 ```

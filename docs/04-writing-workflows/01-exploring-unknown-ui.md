@@ -13,6 +13,10 @@ This is the first step of every new workflow: explore first, write selectors sec
 
 ## The Live Inspector
 
+<video controls width="100%" style={{borderRadius: '8px', marginBottom: '1.5rem'}}>
+  <source src="/video/ui-inspector-demo.mp4" type="video/mp4" />
+</video>
+
 For mouse-driven interactive exploration, run `ui-inspector` from a terminal on the Windows machine:
 
 ```powershell

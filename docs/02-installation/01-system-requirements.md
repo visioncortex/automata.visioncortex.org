@@ -5,7 +5,7 @@ sidebar_label: System Requirements
 
 # System Requirements
 
-ui-automata runs on Windows. There is no server to set up and no cloud dependency.
+ui-automata runs on Windows locally. There is no server and no cloud dependency.
 
 ## Workflow Engine
 
@@ -14,4 +14,5 @@ ui-automata runs on Windows. There is no server to set up and no cloud dependenc
 ## MCP Tool
 
 - Windows (macOS support coming soon)
-- Claude Code or Claude Desktop
+- Claude Code or Claude Desktop, or any MCP capable models
+- Supports HTTP and stdio

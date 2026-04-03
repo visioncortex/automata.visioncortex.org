@@ -7,6 +7,10 @@ sidebar_label: Control Flow
 
 Workflows are not always linear. Preconditions allow phases to be skipped when a condition is not met. Phase jumps enable loops and branching. The `finally` block guarantees cleanup regardless of how a workflow ends.
 
+<video controls width="100%" style={{borderRadius: '8px', marginBottom: '1.5rem'}}>
+  <source src="/video/notepad-loop-counter.mp4" type="video/mp4" />
+</video>
+
 ## Preconditions
 
 A phase can declare a `precondition`. If the condition is false when the phase is reached, the phase is skipped entirely and execution continues with the next phase. This is not an error.

@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+:root {
+  --ifm-heading-font-family: 'Libre Baskerville', Georgia, serif;
+}
+
 :root {
   --ifm-color-primary: #1c7de3;
   --ifm-color-primary-dark: #1970cc;

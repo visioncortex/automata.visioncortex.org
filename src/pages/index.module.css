@@ -1,8 +1,10 @@
 .heroBanner {
+  min-height: 80vh;
   padding: 4rem 0;
-  text-align: center;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 @media screen and (max-width: 966px) {
@@ -11,10 +13,45 @@
   }
 }
 
+.heroInner {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+}
+
+.heroText {
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: right;
+}
+
+.heroVideo {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.heroVideo video {
+  width: 100%;
+  border-radius: 8px;
+  display: block;
+}
+
+@media screen and (max-width: 966px) {
+  .heroInner {
+    flex-direction: column;
+  }
+
+  .heroText,
+  .heroVideo {
+    flex: unset;
+    width: 100%;
+  }
+}
+
 .buttons {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
 .homepageTitle {

@@ -29,7 +29,7 @@ Vision-based agents are useful for exploration and for tasks that genuinely requ
 
 ## Summary
 
-| | ui-automata | AutoHotkey | UIPath | Selenium | Vision agents |
+| | UI Automata | AutoHotkey | UIPath | Selenium | Vision agents |
 |---|---|---|---|---|---|
 | Native Windows apps | ✓ | ✓ | ✓ | ✗ | ✓ |
 | Structured recovery | ✓ | ✗ | partial | ✗ | ✗ |

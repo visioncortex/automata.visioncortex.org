@@ -9,29 +9,37 @@ function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
     <header className={styles.heroBanner}>
-      <div className="container">
-        <h1 className={styles.homepageTitle}>ui-automata</h1>
-        <p className={styles.homepageSubtitle}>
-          Delegate Windows desktop tasks to your AI agent
-        </p>
-        <p>
-          A declarative workflow engine that gives AI agents structured,
-          observable, recoverable control over any Windows UI.
-        </p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/blog/introducing-ui-automata">
-            Learn More
-          </Link>
-          &nbsp;&nbsp;
-          <Link
-            className="button button--primary button--lg"
-            to="/blog/getting-started">
-            Getting Started
-          </Link>
+      <div className="container"><div className={styles.heroInner}>
+        <div className={styles.heroText}>
+          <h1 className={styles.homepageTitle}>UI Automata</h1>
+          <h2 className={styles.homepageSubtitle}>
+            Windows Desktop Control and Automation for AI Agents
+          </h2>
+          <p>
+            A declarative workflow engine that gives AI agents structured,
+            <br/>
+            observable, repeatable control over any Windows GUI app.
+          </p>
+          <div className={styles.buttons}>
+            <Link
+              className="button button--secondary button--lg"
+              to="/blog/introducing-ui-automata">
+              Learn More
+            </Link>
+            &nbsp;&nbsp;
+            <Link
+              className="button button--primary button--lg"
+              to="/docs/installation/desktop-setup/">
+              Install
+            </Link>
+          </div>
         </div>
-      </div>
+        <div className={styles.heroVideo}>
+          <video controls>
+            <source src="/video/Automata Demo.mp4" type="video/mp4" />
+          </video>
+        </div>
+      </div></div>
     </header>
   );
 }

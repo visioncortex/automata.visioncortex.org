@@ -39,10 +39,10 @@ Then run the bundled Notepad demo to confirm the workflow engine works end-to-en
 
 ```powershell
 # Windows 11
-ui-workflow $env:USERPROFILE\.ui-automata\workflow-library\win11\notepad\notepad_demo.yml
+ui-workflow $env:USERPROFILE\.ui-automata\workflows\win11\notepad\notepad_demo.yml
 
 # Windows 10
-ui-workflow $env:USERPROFILE\.ui-automata\workflow-library\win10\notepad\notepad_demo.yml
+ui-workflow $env:USERPROFILE\.ui-automata\workflows\win10\notepad\notepad_demo.yml
 ```
 
-You should see Notepad open, some text typed, and the workflow complete successfully. If it does, you are ready to connect Claude.
+You should see Notepad open, some text typed, and the workflow complete successfully. If it does, you are ready to go.

@@ -24,4 +24,4 @@ Run `ui-workflow-check` on the file before submitting. Run the workflow against 
 
 ## Submitting
 
-Open a pull request against the `workflow-library/` directory. Include a brief description of what the workflow does and which OS app / versions it was tested on.
+Open a pull request against the `workflows/` directory. Include a brief description of what the workflow does and which OS app / versions it was tested on.
