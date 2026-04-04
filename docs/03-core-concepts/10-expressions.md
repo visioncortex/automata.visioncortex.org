@@ -184,6 +184,10 @@ From highest to lowest:
 | `trim(s)` | Remove leading and trailing whitespace |
 | `strlen(s)` | Length of a string in bytes |
 | `split_lines(text, n)` | Split `text` by newlines and return line at index `n` (negative index counts from the end) |
+| `regex_match(s, pattern)` | Returns `true` if `pattern` matches anywhere in `s` |
+| `regex_extract(s, pattern)` | Returns the first capture group if present, otherwise the full match; returns empty string if no match |
+
+Both regex functions use [fancy-regex](https://github.com/fancy-regex/fancy-regex) — the same engine as `ElementHasText` patterns — supporting backreferences and lookahead.
 
 ### Output Buffer
 

@@ -5,15 +5,63 @@ sidebar_label: Workflow Engine
 
 # The Workflow Engine
 
+## Overview
+
 The name *Automata* is deliberate. An automaton is a state machine — a system that moves through defined states in response to inputs. A workflow is exactly that.
 
-Each **phase** is a state. Execution follows a linear path through phases — that is the happy path. Phases can be skipped via preconditions, jumped to via flow control, or interrupted by recovery handlers when something goes wrong. The `finally` phase runs unconditionally at the end, regardless of how the workflow exits. Together these give you: a main path, conditional branches, loops, and guaranteed cleanup — the full vocabulary of a state machine.
+Each **phase** is a state. Execution follows a linear path through phases — that is the happy path. Phases can be skipped via preconditions, jumped to via flow control, or interrupted by recovery handlers when something goes wrong. The `finally` phase runs unconditionally at the end, regardless of how the workflow exits. Together these are the building blocks for any automation: a main path, conditional branches, loops, and guaranteed cleanup.
 
 Workflows can also call other workflows as sub-workflows. Each sub-workflow is its own state machine, nested inside the caller's. State (anchors, variables) is scoped to the nesting level that introduced it and cleaned up automatically when that level exits.
 
-## Every Step is an Action + an Observable Postcondition
+## The Shortcomings of Traditional RPA
 
-The central design decision of the engine is this: **every step declares not just what to do, but what the UI must look like afterward.**
+Traditional RPA tools share a common set of failure modes.
+
+#### Coordinate-based interaction.
+
+Most RPA tools record mouse clicks at screen coordinates or match pixels on screen. These break when the window moves, the display scaling changes, the font rendering differs, or the application is updated. The failure is silent — the click lands in the wrong place and the tool has no idea.
+
+#### Timing assumptions ("click, sleep, pray")
+
+Scripts insert `sleep()` calls between actions to wait for the UI to catch up. No sleep duration is both fast enough on a powerful machine and slow enough on a busy VM. The result is workflows that are either flaky (too short) or unnecessarily slow (too long).
+
+#### No understanding of UI state
+
+Scripts fire actions and move on. They have no model of what the application is doing. A click that was not received, a dialog that appeared, a loading spinner that didn't clear — the script does not know. It proceeds blindly.
+
+#### No structured recovery
+
+When something unexpected happens — an "overwrite?" dialog, a transient error box, a button that takes longer to enable than usual — scripts either crash or silently continue in a broken state. Edge cases are handled as ad-hoc `if` branches scattered throughout the code.
+
+## Design Principles
+
+The failure modes above point to what a reliable workflow engine must do. These are the principles UI Automata is built around.
+
+#### Every action is an intent, not a command
+
+A command says *do this*. An intent says *do this, and I expect to see that*. The difference is verifiability. If the expected outcome is not observed, the engine knows something went wrong and can act accordingly — rather than proceeding blindly into a broken state.
+
+#### The UI is the source of truth
+
+Don't assume a click worked. Don't assume a window is in the same state it was in 100ms ago. After every action, observe the UI to confirm the expected state has been reached. The poll interval is short (100ms); the timeout is generous (seconds to minutes, depending on the step). The UI is free to load at whatever pace it needs.
+
+#### Recovery is domain knowledge, not spaghetti
+
+Every complex application has a finite set of things that can go wrong: error dialogs, save prompts, server-busy warnings, stale focus. This knowledge should be **declarative data** — a list of recovery handlers, each saying: *if I observe this condition, take these actions, then resume from where I was*. The executor applies them automatically whenever a step times out, without the step needing to know anything about recovery.
+
+#### Workflows should be reusable and composable
+
+A workflow that opens a file dialog should not have to be rewritten every time a different file needs to be opened. Parameters make workflows reusable — callers pass in values, the workflow operates on them. Sub-workflows make them composable — complex automations are built from smaller, tested pieces rather than monolithic scripts. Each sub-workflow is its own state machine with its own scope; the parent orchestrates, the children do the work.
+
+## How UI Automata Is Different
+
+### Semantic element locator
+
+Elements are located by their role, accessible name, and AutomationId — properties that are stable across window positions, themes, and OS versions. When the engine clicks an element, it targets the element itself, not a point on screen. Clicks are also guarded: if the target element's bounding box is covered by another window, the click is refused rather than landing on the wrong target.
+
+### Poll loop, not sleeps
+
+Every step ends with a declared postcondition — what state the UI must be in before the workflow proceeds. The engine polls that condition every 100ms:
 
 ```yaml
 - intent: click Save
@@ -28,15 +76,15 @@ The central design decision of the engine is this: **every step declares not jus
   timeout: 10s
 ```
 
-The action fires once. The engine then polls the `expect` condition every 100ms until it is satisfied or the timeout expires. There are no `sleep` calls — the engine waits exactly as long as the UI takes, no more, no less.
+It proceeds the instant the condition is met, and bails cleanly if it is not met within the timeout. There is no dead reckoning — the workflow never blindly continues into a state it has not verified.
 
-This is fundamentally different from a script that does `click(); sleep(2); assert_title()`. A sleep either waits too long (slow) or not long enough (flaky). The poll loop eliminates both failure modes: it proceeds the instant the UI is ready, and it retries up to the declared timeout if it is not.
+### Shadow DOM for UI State
 
-## What Happens on Failure: Structured Recovery
+The engine maintains a cached mirror of the live UIA element tree. Every element the engine interacts with is looked up in this mirror before acting. On staleness — when the app rebuilds its UI tree — the cache is automatically refreshed from the nearest live ancestor. The engine always operates against a known-good view of the UI.
 
-### Recovery Handler
+### Structured recovery
 
-A timeout does not immediately fail the step. Before giving up, the engine evaluates the declared recovery handlers in order:
+Recovery handlers are declared conditions paired with corrective actions and a resume strategy:
 
 ```
 step times out
@@ -51,39 +99,15 @@ step times out
                  └─ still not satisfied → apply on_failure policy (abort or continue)
 ```
 
-A recovery handler has three parts:
-- A **trigger condition** — a UIA query or expression that detects the unexpected state (e.g., "is there an unknown dialog blocking the window?")
-- **Corrective actions** — steps to clear that state (e.g., dismiss the dialog)
-- A **resume strategy** — `retry_step`, `skip_step`, or `fail`
+A handler has three parts: a **trigger condition** (detect the unexpected state, e.g. a dialog popped up), **corrective actions** (e.g. dismiss the dialog), and a **resume strategy**. Handlers are checked local-first (phase scope) then global (workflow scope). A per-workflow cap (`max_recoveries`) prevents infinite recovery loops. This is exception handling for UI automation — the happy path stays clean; known edge cases are handled explicitly in one place.
 
-Handlers are checked local-first (phase scope) then global (workflow scope), so phase-specific cases take priority over general ones. A per-workflow cap (`max_recoveries`) prevents infinite recovery loops.
+## Engine Internals
 
-This model keeps the happy path clean. Unexpected UI states are handled in one explicit place, not scattered through the workflow as defensive checks.
+**Anchors** are named, cached handles to live UI elements. They are resolved once and held across steps. On staleness, they are automatically re-resolved. See [Anchors](./04-anchors.md) for the full lifetime model.
 
-### Fallback Actions
+**The shadow DOM** is a cached mirror of the UIA element tree. When the engine finds a descendant of a scoped anchor, it uses a three-tier lookup: cached live handle (1 COM call), narrowed re-query from the cached step-parent if stale, full DFS from the anchor root only as a last resort.
 
-A step can also declare a `fallback` action — a secondary action to try if the primary action fails and no recovery handler matches. The engine runs the fallback and re-polls `expect` with a fresh timeout. If the fallback also fails to satisfy the condition, `on_failure` determines the outcome.
-
-### Flow Control
-
-Two flags modify a step's standard behaviour:
-
-| Flag | Values | Effect |
-|---|---|---|
-| `on_failure` | `abort` (default), `continue` | Whether a failed step stops the workflow or is skipped |
-| `on_success` | `continue` (default), `return_phase` | Whether success advances to the next step or exits the current phase immediately |
-
-`on_failure: continue` is useful for optional steps — probing for a state that may or may not exist. `on_success: return_phase` is useful for early exits: if a condition is already satisfied before the phase's main work, skip the remaining steps.
-
-## What the Engine Maintains
-
-The engine maintains three pieces of state across steps:
-
-**Anchors** are named, cached handles to live UI elements. They are resolved once (lazily on first use or eagerly at mount, depending on tier) and held across steps. On staleness, they are automatically re-resolved — the engine does not require you to re-find elements whose handles have been invalidated by a UI redraw. See [Anchors](./04-anchors.md) for the full lifetime model.
-
-**The shadow DOM** is a cached mirror of the UIA element tree. When the engine needs to find a descendant of a scoped anchor, it uses a three-tier lookup: a cached live handle (1 COM call), a narrowed re-query from the cached step-parent if the handle is stale, and a full DFS from the anchor root only as a last resort. This avoids redundant tree traversals across repeated steps on the same UI.
-
-**Workflow variables** accumulate across steps. Values written by `Extract`, `Eval`, and `Exec` actions are available to all subsequent steps via `{output.*}` substitution. Parameters passed at invocation are available as `{param.*}`. Variables are scoped to the workflow or sub-workflow that wrote them; output from sub-workflows is merged into the parent's output on return.
+**Workflow variables** accumulate across steps. Values from `Extract`, `Eval`, and `Exec` are available to subsequent steps via `{output.*}`. Parameters are available as `{param.*}`. Sub-workflow output is merged into the parent's output on return.
 
 ## The Anatomy of a Workflow File
 

@@ -84,7 +84,7 @@ The MCP equivalent for agents: `desktop element_tree hwnd=0x1a2b3c`, which also 
 What to look for:
 - **Role** — the UIA control types in use (`button`, `edit`, `list item`, `tree item`, `document`, etc.)
 - **Name** — accessible names, which are what `[name=...]` predicates match
-- **Automation ID** — developer-assigned IDs, the most stable anchoring point when present
+- **AutomationId** — developer-assigned IDs, the most stable anchoring point when present
 - **Parent and Siblings** — which containers wrap which controls, to decide where to put anchors
 
 :::note
@@ -155,8 +155,9 @@ Anchor the outermost stable container. Use selectors for everything inside it.
 
 | Tool | How to use | Best for |
 |---|---|---|
-| `ui-inspector` | Run in terminal, hover elements | Quick interactive lookup, identifying anchor boundaries |
+| `ui-inspector` | Run in terminal, hover elements | Quick interactive exploration, identifying elements and anchors |
 | `list-windows` | CLI | Find HWNDs and process names |
-| `element-tree <hwnd>` | CLI | Full tree dump for offline analysis |
-| `desktop find_elements` | MCP | Testing a selector, verifying ancestor context |
-| `vision window_layout` | MCP | Visual grounding — OCR + layout of a window in screen coordinates |
+| `element-tree <hwnd>` | CLI / MCP | Full tree dump for offline analysis |
+| `element-tree <hwnd> --interactive` | CLI | Testing a selector interactively |
+| `desktop find_elements` | MCP | Testing a selector, finding ancestors / siblings |
+| `vision window_layout` | MCP | Visual grounding — OCR + layout of a window in screen space |

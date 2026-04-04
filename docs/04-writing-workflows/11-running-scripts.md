@@ -9,6 +9,8 @@ The `Exec` action runs any executable on the Windows machine: Python scripts, Po
 
 ## Basic Usage
 
+### Python
+
 ```yaml
 - intent: run post-processing script
   action:
@@ -25,6 +27,23 @@ The `Exec` action runs any executable on the Windows machine: Python scripts, Po
 `command` is resolved via `PATH`. `args` are passed as a list — no shell quoting required. `ExecSucceeded` checks that the process exited with code 0.
 
 Use `{workflow.dir}` to locate scripts that live alongside the workflow file. This works regardless of the directory the executor was launched from.
+
+### PowerShell
+
+PowerShell scripts work the same way:
+
+```yaml
+- intent: query service status
+  action:
+    type: Exec
+    command: powershell
+    args:
+      - "-Command"
+      - "Get-Service -Name '{param.service_name}' | Select-Object -ExpandProperty Status"
+    key: service_status
+  expect:
+    type: ExecSucceeded
+```
 
 ## Passing Workflow Data to a Script
 
@@ -102,23 +121,6 @@ When a workflow has extracted multiple values from the UI — a list of items, a
 ```
 
 `WriteOutput` creates or truncates the file. Each stored value becomes one quoted line — safe to read back as a CSV from Python.
-
-## PowerShell
-
-PowerShell scripts work the same way:
-
-```yaml
-- intent: query service status
-  action:
-    type: Exec
-    command: powershell
-    args:
-      - "-Command"
-      - "Get-Service -Name '{param.service_name}' | Select-Object -ExpandProperty Status"
-    key: service_status
-  expect:
-    type: ExecSucceeded
-```
 
 ## Combining UI Automation and Scripting
 

@@ -303,7 +303,7 @@ Reads an attribute from a matched element and stores it under a key. See [Extrac
 
 ### `Eval`
 
-Computes an expression and stores the result. Supports arithmetic, string concatenation, comparisons, and built-in functions (`split_lines`, `round`, `floor`, `ceil`, `min`, `max`, `trim`, `len`).
+Computes an expression and stores the result. Supports arithmetic, string concatenation, comparisons, and a range of built-in functions. See [Expressions](../core-concepts/expressions) for the full syntax.
 
 ```yaml
 - intent: compute next font size cycling from 12 to 36

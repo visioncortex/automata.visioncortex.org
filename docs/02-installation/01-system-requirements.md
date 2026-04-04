@@ -5,7 +5,7 @@ sidebar_label: System Requirements
 
 # System Requirements
 
-ui-automata runs on Windows locally. There is no server and no cloud dependency.
+ui-automata runs on Windows locally. There is no server or cloud dependency.
 
 ## Workflow Engine
 

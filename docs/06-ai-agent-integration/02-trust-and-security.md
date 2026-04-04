@@ -1,9 +1,9 @@
 ---
-title: File and System Operations
-sidebar_label: File & System
+title: Trust and Security
+sidebar_label: Trust & Security
 ---
 
-# File and System Operations
+# Trust and Security
 
 Beyond UI automation, ui-automata exposes file system and system command capabilities on the connected Windows machine — useful for reading logs, moving artifacts, running scripts, and gathering diagnostics as part of a larger agent workflow.
 

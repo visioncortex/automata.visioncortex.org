@@ -94,9 +94,8 @@ Controls what happens when `expect` times out (after any `fallback`):
 
 | Value | Behaviour |
 |---|---|
-| `none` | Fall back to workflow default |
-| `fixed: { count: N, delay: Xms }` | Re-execute the action up to N more times |
-| `with_recovery` | Check registered recovery handlers, then retry the step |
+| `none` | No retries — the step fails immediately when `expect` times out |
+| `fixed: { count: N, delay: Xms }` | Re-execute the action up to N additional times, waiting `delay` between attempts |
 
 ```yaml
 retry:
