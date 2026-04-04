@@ -7,13 +7,13 @@ sidebar_label: What is UI Automata?
 
 UI Automata is a declarative workflow engine for Windows UI automation, designed from the ground up for AI agents. Instead of writing scripts that click at coordinates or sleep-and-hope, you describe what should happen. The engine handles action, recovery, and observability.
 
-## The Delegation Problem
+## Why Windows Desktop Automation Is Hard
 
-There is a category of work that is too interactive to automate with a traditional script, and too tedious to keep doing by hand. Checking a service status in Event Viewer. Extracting a value from a legacy desktop application. Configuring a settings dialog that has no API. These tasks require judgment (but not much of it). They are exactly the kind of thing you would hand off to a capable colleague.
+There is a category of work that is too interactive to automate with a traditional script, and too tedious to keep doing by hand. Checking a service status in Event Viewer. Extracting a value from a legacy enterprise app. Configuring a settings dialog that has no API. These tasks require judgment (but not much of it). They are exactly the kind of thing you would hand off to a capable colleague.
 
-AI agents can be that colleague. But today, "computer use" usually means an agent staring at screenshots, guessing where to click, and hoping nothing moved. That approach is slow, expensive, and breaks the moment the window is a pixel off.
+AI agents can be that colleague. The problem is the interface.
 
-UI Automata is a different answer: give the agent a structured, reliable interface to the Windows UI (fast, auditable, and recoverable) so it can act with the same confidence a human would.
+The Windows desktop is genuinely difficult to automate programmatically. Unlike the web (where the DOM is structured and designed to be read by code), the Windows desktop is a patchwork of UI frameworks built over decades: Win32, MFC, WPF, UWP, WinUI 3, embedded web views, custom renderers. Each one exposes its internals differently. Dialogs pop up unexpectedly. Apps behave differently across OS versions, display scaling, and language packs. There is no single standard to rely on.
 
 ## How It Works
 

@@ -19,6 +19,11 @@ A step is the atomic unit of work in a workflow. Each step performs one action, 
     type: Click
     scope: toolbar
     selector: ">> [role=button][name=Save]"
+  fallback:
+    type: PressKey
+    scope: editor
+    selector: "*"
+    key: "ctrl+s"
   expect:
     type: DialogAbsent
     scope: main_window

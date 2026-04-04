@@ -41,19 +41,25 @@ After updating `.mcp.json`, run `/mcp` in Claude Code and click **Reconnect** ne
 
 ### Inside WSL
 
-WSL cannot reach `127.0.0.1` on the Windows host — that loopback address is local to Windows only. You need to bind `automata-agent` to the Windows host's LAN IP and allow it through the Windows Firewall.
+WSL cannot reach `127.0.0.1` on the Windows host — that loopback address is local to Windows only. The recommended approach is to bind `automata-agent` to the **WSL virtual adapter IP**. Windows creates a private virtual network exclusively for WSL (shown as `vEthernet (WSL)` in `ipconfig`). It is unreachable from the rest of your LAN, so no firewall rule is needed.
 
-**Step 1 — find the Windows host IP**
+**Step 1 — find the WSL virtual adapter IP**
 
-In PowerShell, run `ipconfig` and look for the IPv4 address of your main network adapter (typically "Ethernet adapter" or "Wi-Fi"):
+From PowerShell, run `ipconfig` and look for the `vEthernet (WSL)` adapter:
 
 ```powershell
 ipconfig
 ```
 
 ```
-Ethernet adapter Ethernet:
-   IPv4 Address. . . . . . . . . . . : 192.168.0.120
+Ethernet adapter vEthernet (WSL):
+   IPv4 Address. . . . . . . . . . . : 172.24.128.1
+```
+
+From WSL you can get the same address with:
+
+```bash
+ip route show default | awk '{print $3}'
 ```
 
 **Step 2 — bind `automata-agent` to that IP**
@@ -61,40 +67,28 @@ Ethernet adapter Ethernet:
 Pass the address via `--host`:
 
 ```powershell
-automata-agent --host 192.168.0.120
+automata-agent --host 172.24.128.1
 ```
 
-The agent will print an MCP config block using that IP instead of `127.0.0.1`.
+The agent will print an MCP config block using that IP.
 
-**Step 3 — allow the port through Windows Firewall**
+**Step 3 — paste the config into WSL**
 
-Windows Firewall blocks inbound connections to the port by default. Add an inbound rule to allow it:
-
-![Windows Firewall inbound rule dialog](../../static/img/automata-agent-firewall.png)
-
-Or add the rule from PowerShell (replace `3001` with the port printed by the agent):
-
-```powershell
-New-NetFirewallRule -DisplayName "automata-agent" -Direction Inbound -Protocol TCP -LocalPort 3001 -Action Allow
-```
-
-**Step 4 — paste the config into WSL**
-
-Copy the printed config block and paste it into `.mcp.json` inside your WSL home directory. The URL will use the Windows host IP:
+Copy the printed config block and paste it into `.mcp.json` inside your WSL home directory:
 
 ```json
 {
   "mcpServers": {
     "ui-automata": {
       "type": "http",
-      "url": "http://192.168.0.120:3001/mcp"
+      "url": "http://172.24.128.1:3001/mcp"
     }
   }
 }
 ```
 
 :::caution
-The Windows host IP can change (e.g. after a router restart or network switch). If the connection stops working, re-run `ipconfig`, restart `automata-agent --host <new-ip>`, update the firewall rule port if it changed, and update `.mcp.json`.
+The WSL virtual adapter IP is reassigned each time WSL restarts. If the connection stops working, re-run `ip route show default` in WSL to get the new IP, restart `automata-agent --host <new-ip>`, and update `.mcp.json`.
 :::
 
 ## Claude Desktop

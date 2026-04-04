@@ -5,7 +5,7 @@ sidebar_label: Exploring the UI
 
 # Exploring an Unknown UI
 
-Before you can write a selector, you need to know the element tree. ui-automata ships CLI tools for inspecting a live Windows UI — listing windows, walking the UIA element tree, and testing selectors — without touching a workflow file.
+Before you can write a selector, you need to know the element tree. ui-automata ships CLI tools for inspecting a live Windows UI.
 
 The same tools are exposed as MCP actions, so the AI agent and the workflow author are working from identical information. There is no separate "agent view" of the UI.
 
@@ -82,21 +82,46 @@ This walks the entire subtree and prints every element with its role, name, clas
 The MCP equivalent for agents: `desktop element_tree hwnd=0x1a2b3c`, which also accepts an optional `selector` to filter output to matched subtrees.
 
 What to look for:
-- **Roles** — the UIA control types in use (`button`, `edit`, `list item`, `tree item`, `document`, etc.)
-- **Names** — accessible names, which are what `[name=...]` predicates match
-- **AutomationIds** — developer-assigned IDs, the most stable anchoring point when present
-- **Depth and nesting** — which containers wrap which controls, to decide where to put anchors
+- **Role** — the UIA control types in use (`button`, `edit`, `list item`, `tree item`, `document`, etc.)
+- **Name** — accessible names, which are what `[name=...]` predicates match
+- **Automation ID** — developer-assigned IDs, the most stable anchoring point when present
+- **Parent and Siblings** — which containers wrap which controls, to decide where to put anchors
 
 :::note
 Elements with `role=window` in the tree are hosted child windows (e.g. embedded WebView, ActiveX, or Win32 controls inside a WPF shell). Their leaf descendants are reachable via `>>`, but the `role=window` element itself cannot be used as a selector target.
 :::
 
-## Step 3: Test a Selector Live
+## Step 3: Testing a Selector
 
-Once you have a candidate selector, verify it before committing it to a workflow. The MCP `find_elements` action runs a live query against the window and returns each match with its role, name, bounds, and full ancestor chain:
+Once you have a candidate selector, verify it before committing it to a workflow.
+
+Pass `--interactive` to `element-tree` to enter REPL mode. On startup it constructs the element tree and caches it, then waits for selector input. Because queries run against the cache, results are instant and deterministic — no live UIA round-trips.
+
+Below, we run it against an Explorer window, find the file list, and enumerate all items in it.
+
+```python
+element-tree 0x80818 --interactive
+constructing element tree ... done
+$ >> [role=list]
+[role=list][name="Items View"] rect=(1163,90,841,390)
+$ >> [role=list][name="Items View"] > [role=list item]
+[role=list item][name="logs"][id=0] rect=(1177,121,599,23)
+[role=list item][name="workflows"][id=1] rect=(1177,142,599,23)
+[role=list item][name=".client_id"][id=2] rect=(1177,163,599,23)
+[role=list item][name="automata-agent.exe"][id=3] rect=(1177,184,599,23)
+[role=list item][name="element-tree.exe"][id=4] rect=(1177,205,599,23)
+[role=list item][name="identity.json"][id=5] rect=(1177,226,599,23)
+[role=list item][name="list-windows.exe"][id=6] rect=(1177,247,599,23)
+[role=list item][name="ui-inspector.exe"][id=7] rect=(1177,268,599,23)
+[role=list item][name="ui-sight-windows.exe"][id=8] rect=(1177,289,599,23)
+[role=list item][name="ui-workflow.exe"][id=9] rect=(1177,310,599,23)
+[role=list item][name="ui-workflow-check.exe"][id=10] rect=(1177,331,599,23)
+```
+
+The MCP `find_elements` action runs a live query against the window and returns each match with its role, name and bounds.
 
 ```
-desktop find_elements  hwnd=0x1A2B3C  selector=">> [role=edit][name='File name:']"
+desktop find_elements hwnd=0x1A2B3C selector=">> [role=edit][name='File name:']"
 ```
 
 ```json
@@ -133,5 +158,5 @@ Anchor the outermost stable container. Use selectors for everything inside it.
 | `ui-inspector` | Run in terminal, hover elements | Quick interactive lookup, identifying anchor boundaries |
 | `list-windows` | CLI | Find HWNDs and process names |
 | `element-tree <hwnd>` | CLI | Full tree dump for offline analysis |
-| `desktop find_elements` | MCP (agent) | Testing a selector, verifying ancestor context |
-| `vision window_layout` | MCP (agent) | Visual grounding — OCR + layout of a window in screen coordinates |
+| `desktop find_elements` | MCP | Testing a selector, verifying ancestor context |
+| `vision window_layout` | MCP | Visual grounding — OCR + layout of a window in screen coordinates |

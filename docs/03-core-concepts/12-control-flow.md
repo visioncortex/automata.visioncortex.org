@@ -102,10 +102,10 @@ Combining `Eval` variables, `EvalCondition`, and phase jumps gives you a full lo
 │         │ i ≤ 10
 │         ▼
 ▲    ┌───────────┐
-│    │ loop_body │ do work, increment i
+│    │ loop_body │  do work, increment i
 │    └────┬──────┘
 │         │
-└─────────┘
+└─────────┘  loop back
 ```
 
 Here is a complete example — `notepad_loop_counter` — which counts from 1 to 10, types each number into Notepad, accumulates a running total, and writes the final sum:

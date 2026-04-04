@@ -46,12 +46,16 @@ module.exports = {
           title: 'Docs',
           items: [
             {
-              label: 'Install',
+              label: 'Installation',
               to: '/docs/installation/desktop-setup/',
             },
             {
-              label: 'Concepts',
+              label: 'Core Concepts',
               to: '/docs/core-concepts/workflow-engine/',
+            },
+            {
+              label: 'Writing Workflows',
+              to: '/docs/writing-workflows/exploring-unknown-ui/',
             },
           ],
         },
@@ -104,6 +108,7 @@ module.exports = {
       '@docusaurus/preset-classic',
       {
         docs: {
+          sidebarCollapsed: false,
           sidebarPath: require.resolve('./sidebars.js'),
           editUrl: 'https://github.com/visioncortex/ui-automata.visioncortex.org/edit/main/',
           showLastUpdateAuthor: true,

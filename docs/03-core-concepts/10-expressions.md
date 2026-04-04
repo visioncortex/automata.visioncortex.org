@@ -77,16 +77,16 @@ output.count > 0 && output.status == 'done'
 
 The key difference from bash: `Bool` is an explicit type. In bash, any non-empty string is truthy and you can write `[[ "$x" && "$y" ]]`. Here, `&&` requires its operands to actually be `Bool` — produced by a comparison — not just any non-empty value. Type errors are explicit rather than silently wrong.
 
-| Concept | bash | Expression language |
+| Concept | bash | Automata expression |
 |---|---|---|
 | Variable reference | `$count` | `output.count` / `param.count` / `count` (bare) |
 | Arithmetic | `$(( count + 1 ))` | `count + 1` |
 | String concat | `"${a}${b}"` | `a + b` (when either side is non-numeric) |
 | Numeric comparison | `[[ "$count" -gt 0 ]]` | `count > 0` |
 | String comparison | `[[ "$status" == "done" ]]` | `output.status == 'done'` |
-| Equality (auto-detects) | n/a | `output.size == 0` (numeric if both parse) |
+| Equality | `-eq` (numeric) / `==` (string) | `==` and `!=` (type inferred from operands) |
 | Boolean AND | `[[ ... && ... ]]` | `... && ...` — operands **must** be `Bool` |
-| Boolean OR | `[[ ... \|\| ... ]]` | `... \|\| ...` — operands **must** be `Bool` |
+| Boolean OR | <code>[[ ... &#124;&#124; ... ]]</code> | <code>... &#124;&#124; ...</code> — operands **must** be `Bool` |
 | Implicit truthiness | `[[ "$x" ]]` (non-empty) | not supported — use `output.x != ''` |
 | String literal | `"hello"` | `'hello'` (single quotes only) |
 | String length | `${#var}` | `strlen(var)` |
@@ -162,7 +162,7 @@ From highest to lowest:
 | 4 | `+` `-` |
 | 5 | `==` `!=` `<` `<=` `>` `>=` → always return `Bool` |
 | 6 | `&&` — both operands must be `Bool` |
-| 7 | `\|\|` — both operands must be `Bool` |
+| 7 | <code>&#124;&#124;</code> — both operands must be `Bool` |
 
 
 ## Built-In Functions
