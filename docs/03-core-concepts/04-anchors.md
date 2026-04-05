@@ -58,7 +58,7 @@ Root anchors are resolved **eagerly at mount time**. If the window is not found 
 
 ## Session Anchors
 
-`Session` is the tier for transient windows that may or may not be present (dialogs, progress windows, secondary panels). Like Root anchors, Session anchors are resolved lazily and HWND-locked on first resolution. Unlike Root, a stale Session anchor is not fatal.
+`Session` is the tier for transient windows that may or may not be present (dialogs, progress windows, secondary panels). Unlike Root anchors, Session anchors are resolved lazily; like Root anchors, they are HWND-locked on first resolution. Unlike Root, a stale Session anchor is not fatal.
 
 When a Session anchor goes stale, the engine invalidates it **and all of its Stable descendants** in one sweep. This cascade means you never end up with a Stable child holding a live handle that points into a closed dialog. Everything starts fresh on next use.
 
@@ -75,7 +75,9 @@ On staleness, the engine does not immediately fall back to a full DFS from the r
 
 ## Ephemeral Anchors
 
-`Ephemeral` is for handles you discover at runtime rather than declare statically. The classic case is a row that was just created by an action: you do not know its selector in advance, so you capture the element after it appears and give it a name for use in subsequent steps. Ephemeral anchors are released at the end of the workflow, or at the end of the sub-workflow that created them.
+`Ephemeral` is declared the same way as `Stable`: with a `parent` and a `selector`, but has a shorter lifetime. A Stable anchor survives across phases; an Ephemeral anchor is released at the end of the phase that mounted it.
+
+Use `Ephemeral` for transient UI that only exists during a single phase: a Save As dialog, a progress window, a context menu. Declaring it Ephemeral makes the lifetime explicit and ensures the handle is not held beyond the phase where it is relevant.
 
 ## Mount and Unmount
 
@@ -149,7 +151,7 @@ The engine's behaviour at mount depends on the selector:
 - **No selector (or wildcard)**: Opens a new tab. The tab is **closed automatically** when the anchor is unmounted or the workflow ends.
 - **A real selector**: Polls the browser's open tabs until one matches (up to 30 seconds). The tab is **left open** on unmount (the anchor attached to an existing tab, not created it).
 
-When used as `scope` for UIA actions (like `Invoke` or `Click`), a Tab anchor resolves to the parent Browser window. When used as `scope` for CDP actions (`BrowserNavigate`, `BrowserEval`, `TabWithAttribute`), it targets the tab directly.
+When used as `scope` for element actions (like `Invoke` or `Click`), a Tab anchor scopes the selector into the page's `document` node — so selectors target web content, not the browser chrome. CDP actions (`BrowserNavigate`, `BrowserEval`, `TabWithAttribute`) target the tab's JavaScript context directly.
 
 #### Using Browser and Tab Together
 

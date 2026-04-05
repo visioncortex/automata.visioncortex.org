@@ -47,7 +47,7 @@ launch:
   wait: new_pid
 ```
 
-Win11 Notepad runs as a single-instance process with a tabbed interface. Launching it again brings focus to the existing process rather than spawning a new one. Use `new_window` to detect the new tab window:
+Win11 Notepad runs as a single-instance process with a tabbed interface. Launching it creates a new window under the existing process rather than a new process. Use `new_window` to detect it:
 
 ```yaml
 # win11

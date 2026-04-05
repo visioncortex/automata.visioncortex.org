@@ -40,14 +40,6 @@ A step can chain multiple predicates. All must match.
 
 Role is `button` AND name is exactly `Save`. One predicate leaves ambiguity; two predicates eliminate it. A dialog with three buttons only has one named Save.
 
-A bare word before the brackets is shorthand for `[role=...]`:
-
-```
-Button[name=Open]
-```
-
-is equivalent to `[role=button][name=Open]`.
-
 ### OR Values
 
 The same UI element can have different role strings across Windows versions or application updates. OR values let one selector match both:
@@ -122,7 +114,7 @@ ToolBar > Group:nth(1)     # second Group (0-indexed) that is a direct child of 
 
 ## Tree Navigation: `:parent` and `:ancestor`
 
-Sometimes the element you need to act on can only be identified through one of its children. Navigate up with `:parent` or `:ancestor(n)`. `:parent` is shorthand for `:ancestor(0)` (one level up).
+Sometimes the element you need to act on can only be identified through one of its children. Navigate up with `:parent` or `:ancestor(n)`. `:parent` is shorthand for `:ancestor(1)` (one level up).
 
 ```python
 >> [role=button][name=Settings]:parent

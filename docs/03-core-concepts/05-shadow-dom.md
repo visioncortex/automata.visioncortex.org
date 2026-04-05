@@ -31,7 +31,7 @@ Speed is only half the problem. The other half is identity.
 
 Imagine a workflow targeting a document editor. The user has a browser window in the background. Midway through the workflow, a notification pops up and the browser steals focus. Without identity tracking, a selector like `[name~=MyApp]` might now match a browser window that happens to have "MyApp" in its title. The workflow keeps running, against the wrong window.
 
-HWND locking closes this attack surface.
+HWND locking prevents this.
 
 When a Root anchor is first resolved, the engine records the exact HWND (operating system window handle) of the matched window. Every subsequent resolution goes directly to that HWND, bypassing the selector entirely. No matter what happens to the desktop:
 
@@ -75,4 +75,4 @@ This walk-up strategy is why well-structured workflows rarely need explicit anch
 
 ## Subflow Depth Scoping
 
-When the engine enters a subflow, it increments a depth counter. Stable and Ephemeral anchors declared in the child workflow are stored under a depth-prefixed key, keeping them isolated from parent anchors of the same name. Root and Session anchors are not prefixed: they are shared across all depths, so a subflow can reference the parent's main window without re-declaring it.
+Stable and Ephemeral anchors are scoped to the subflow that declares them — a child workflow's anchors do not conflict with parent anchors of the same name. Root and Session anchors are shared across all depths: if a subflow declares an anchor with the same name as one already mounted by the parent, the parent's cached handle is reused. No duplicate resolution, no duplicate element tree.

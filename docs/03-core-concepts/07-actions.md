@@ -25,7 +25,7 @@ Clicks at a fractional position within the element's bounding box. Useful for ca
 |---|---|
 | `x_pct` | Horizontal position as a fraction of element width (0.0 = left edge, 1.0 = right edge) |
 | `y_pct` | Vertical position as a fraction of element height (0.0 = top edge, 1.0 = bottom edge) |
-| `kind` | Mouse button: `Left` (default), `Right`, or `Middle` |
+| `kind` | Click type: `left` (default), `right`, `middle`, `double`, `triple` |
 
 ```yaml
 - intent: click the centre of the canvas
@@ -104,10 +104,6 @@ Pauses execution for a fixed `duration`. Useful after a `Hover` action to wait f
 ### MoveFile
 
 Moves or renames a file. Supports `{output.*}` and `{param.*}` substitution in both `source` and `destination`.
-
-### WriteFile
-
-Writes a string to a file, creating it if it does not exist.
 
 ### WriteOutput
 

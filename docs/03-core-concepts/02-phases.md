@@ -35,7 +35,7 @@ phases:
 | `steps` | yes | Ordered list of steps to execute |
 | `mount` | no | Anchor names to activate at phase start |
 | `unmount` | no | Anchor names to release at phase end (even on failure) |
-| `precondition` | no | Condition evaluated before mounting; phase is silently skipped if false |
+| `precondition` | no | Condition evaluated before mounting; phase is skipped (logged, not an error) if false |
 | `recovery` | no | Recovery handler configuration for this phase |
 | `finally` | no | If `true`, the phase runs even when earlier phases have failed |
 
@@ -47,7 +47,7 @@ phases:
 
 ### `precondition`
 
-Evaluated before the phase's anchors are mounted. If the condition is false, the phase is silently skipped (not an error).
+Evaluated before the phase's anchors are mounted. If the condition is false, the phase is skipped.
 
 ```yaml
 - name: close_progress_dialog
@@ -103,7 +103,7 @@ A flow-control phase is a conditional jump. It has no steps and no anchor lifecy
   flow_control:
     condition:
       type: EvalCondition
-      expr: "{output.counter} < {param.max}"
+      expr: "output.counter < param.max"
     go_to: process_item
 ```
 

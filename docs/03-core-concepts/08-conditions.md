@@ -138,12 +138,12 @@ expect:
 
 `FileExists.path` supports `{output.*}` substitution.
 
-`EvalCondition` evaluates a boolean expression against the current output, locals, and params. Operators: `==`, `!=`, `<`, `>`, `<=`, `>=`, `&&`, `||`, `!`.
+`EvalCondition` evaluates a boolean expression against the current output, locals, and params. Operators: `==`, `!=`, `<`, `>`, `<=`, `>=`, `&&`, `||`.
 
 ```yaml
 expect:
   type: EvalCondition
-  expr: "{output.count} > 0"
+  expr: "output.count > 0"
 ```
 
 `Always` is used as `expect` on steps where the action itself guarantees success (e.g. `NoOp`, `Capture`, `Eval`).

@@ -201,10 +201,11 @@ Jump to a terminal phase to exit early without error:
 
 ## The `finally` Block
 
-A phase named `finally` runs unconditionally at the end of a workflow, whether it succeeded, failed, or was jumped to early. Use it to close applications, clean up temporary files, or restore state.
+A phase with `finally: true` runs unconditionally at the end of a workflow, whether it succeeded, failed, or was jumped to early. Use it to close applications, clean up temporary files, or restore state.
 
 ```yaml
-- name: finally
+- name: cleanup
+  finally: true
   steps:
     - intent: close the application
       action:
@@ -213,4 +214,4 @@ A phase named `finally` runs unconditionally at the end of a workflow, whether i
       expect: { type: Always }
 ```
 
-`finally` runs even if a previous phase failed, making it the right place for any cleanup that must always happen.
+`finally: true` phases run even if a previous phase failed, making them the right place for any cleanup that must always happen.
