@@ -35,7 +35,7 @@ phases:
 | `steps` | yes | Ordered list of steps to execute |
 | `mount` | no | Anchor names to activate at phase start |
 | `unmount` | no | Anchor names to release at phase end (even on failure) |
-| `precondition` | no | Condition evaluated before mounting — phase is silently skipped if false |
+| `precondition` | no | Condition evaluated before mounting; phase is silently skipped if false |
 | `recovery` | no | Recovery handler configuration for this phase |
 | `finally` | no | If `true`, the phase runs even when earlier phases have failed |
 
@@ -43,11 +43,11 @@ phases:
 
 `mount:` activates the listed anchors at the start of the phase before any steps run. Root anchors are resolved immediately on mount; Stable anchors are resolved lazily on first use.
 
-`unmount:` releases the listed anchors at the end of the phase, even if steps fail. Use it to clean up Stable and Session anchors that are only needed for this phase. Root anchors cannot be unmounted — they persist for the entire workflow.
+`unmount:` releases the listed anchors at the end of the phase, even if steps fail. Use it to clean up Stable and Session anchors that are only needed for this phase. Root anchors cannot be unmounted: they persist for the entire workflow.
 
 ### `precondition`
 
-Evaluated before the phase's anchors are mounted. If the condition is false, the phase is silently skipped — not an error.
+Evaluated before the phase's anchors are mounted. If the condition is false, the phase is silently skipped (not an error).
 
 ```yaml
 - name: close_progress_dialog
@@ -96,7 +96,7 @@ Opt a phase into named recovery handlers via `recovery.handlers`. The engine che
 
 ## Flow-Control Phases
 
-A flow-control phase is a conditional jump. It has no steps and no anchor lifecycle — just a condition and a target phase name.
+A flow-control phase is a conditional jump. It has no steps and no anchor lifecycle: just a condition and a target phase name.
 
 ```yaml
 - name: check_loop_condition

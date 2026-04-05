@@ -5,21 +5,21 @@ sidebar_label: Selectors
 
 # Selectors
 
-The Windows UI Automation element tree is messy. A typical application window contains hundreds of elements: nested panels, unlabelled containers, toolbars with identical-looking buttons, lists where every row has the same role and no name. Individual elements often carry only partial information — a role but no name, a name but the wrong role, an AutomationId in one OS version but not another.
+The Windows UI Automation element tree is messy. A typical application window contains hundreds of elements: nested panels, unlabelled containers, toolbars with identical-looking buttons, lists where every row has the same role and no name. Individual elements often carry only partial information (a role but no name, a name but the wrong role, an AutomationId in one OS version but not another).
 
-No single property is reliably enough on its own to pinpoint the exact element you need. Selectors exist to let you combine every available signal — role, name, AutomationId, structural position, parent context, tree depth — into a precise, unambiguous address.
+No single property is reliably enough on its own to pinpoint the exact element you need. Selectors exist to let you combine every available signal (role, name, AutomationId, structural position, parent context, tree depth) into a precise, unambiguous address.
 
-If you have written CSS before, the syntax will feel familiar — and intentionally so. CSS invented the ideas of `#id`, `.class`, `>` child, and `>>` descendant combinators as a way to pinpoint elements in a tree. This selector language borrows the same vocabulary, applied to the Windows UI Automation tree instead of the DOM.
+If you have written CSS before, the syntax will feel familiar, and intentionally so. CSS invented the ideas of `#id`, `.class`, `>` child, and `>>` descendant combinators as a way to pinpoint elements in a tree. This selector language borrows the same vocabulary, applied to the Windows UI Automation tree instead of the DOM.
 
 ## Semantic Properties, Not Visual Ones
 
-Selectors operate on Windows UI Automation properties — the accessibility layer baked into Windows. This is a critical design choice. UIA properties are stable:
+Selectors operate on Windows UI Automation properties (the accessibility layer baked into Windows). This is a critical design choice. UIA properties are stable:
 
 - **Role** (`button`, `edit`, `list item`) is determined by the control type, not its appearance
-- **Name** is the accessible name — what a screen reader would announce — *usually* matches the on-screen text
+- **Name** is the accessible name (what a screen reader would announce); *usually* matches the on-screen text
 - **AutomationId** is a developer-assigned identifier that survives localization and theming
 
-A pixel-coordinate-based tool breaks when the window moves or the DPI changes. A selector-based tool does not — the element is the same element regardless of where it is rendered on screen.
+A pixel-coordinate-based tool breaks when the window moves or the DPI changes. A selector-based tool does not: the element is the same element regardless of where it is rendered on screen.
 
 | Attribute | UIA property |
 |---|---|
@@ -77,7 +77,7 @@ Use `=` when the name is stable and fully known. Use `~=` when the name includes
 >> [role=button][name^=Don][name$=Save]
 ```
 
-Matches "Don't Save" — whether the apostrophe is `U+0027` or `U+2019` (right single quotation mark, common in newer Windows versions).
+Matches "Don't Save" whether the apostrophe is `U+0027` or `U+2019` (right single quotation mark, common in newer Windows versions).
 
 ## Combinators: Structural Context
 
@@ -108,7 +108,7 @@ scope: dialog
 selector: ">> [role=edit][name=Filename]"
 ```
 
-Without `>>`, the selector would test the dialog element itself against `[role=edit]` — which would fail.
+Without `>>`, the selector would test the dialog element itself against `[role=edit]`, which would fail.
 
 ## Positional Modifier: `:nth`
 
@@ -122,7 +122,7 @@ ToolBar > Group:nth(1)     # second Group (0-indexed) that is a direct child of 
 
 ## Tree Navigation: `:parent` and `:ancestor`
 
-Sometimes the element you need to act on can only be identified through one of its children. Navigate up with `:parent` or `:ancestor(n)`. `:parent` is shorthand for `:ancestor(0)` — one level up.
+Sometimes the element you need to act on can only be identified through one of its children. Navigate up with `:parent` or `:ancestor(n)`. `:parent` is shorthand for `:ancestor(0)` (one level up).
 
 ```python
 >> [role=button][name=Settings]:parent
@@ -144,7 +144,7 @@ Finds the Performance button, moves to its parent, then selects the 10th child o
 
 ## Common Patterns
 
-#### Pin by AutomationId when available — it is the most stable identifier:
+#### Pin by AutomationId when available: it is the most stable identifier.
 ```yaml
 selector: ">> [id=SettingsPageAbout_New]"
 ```
@@ -162,7 +162,7 @@ Role alone is too broad; name alone may match non-interactive elements. Together
 ```python
 [name~=Notepad]
 ```
-Matches "Notepad", "Untitled - Notepad", "report.txt - Notepad" — any window whose title contains "Notepad".
+Matches "Notepad", "Untitled - Notepad", "report.txt - Notepad": any window whose title contains "Notepad".
 
 #### Anchor on a container you can only find through a child:
 

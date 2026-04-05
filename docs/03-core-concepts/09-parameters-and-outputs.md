@@ -5,7 +5,7 @@ sidebar_label: Params & Outputs
 
 # Parameters and Outputs
 
-Workflows are reusable. Parameters let callers pass values in; outputs let workflows return structured data back to the caller — whether that is another workflow, an MCP tool call, or a test assertion.
+Workflows are reusable. Parameters let callers pass values in; outputs let workflows return structured data back to the caller (whether that is another workflow, an MCP tool call, or a test assertion).
 
 ## Declaring Parameters
 
@@ -60,7 +60,7 @@ Use `{param.name}` in any string field of the workflow YAML: selectors, intent s
     type: ExecSucceeded
 ```
 
-`{workflow.dir}` is a built-in variable that expands to the directory containing the workflow YAML file itself — not the process working directory. Use it to reference scripts or assets that live alongside the workflow, so paths stay correct regardless of where `ui-workflow` is invoked from.
+`{workflow.dir}` is a built-in variable that expands to the directory containing the workflow YAML file itself, not the process working directory. Use it to reference scripts or assets that live alongside the workflow, so paths stay correct regardless of where `ui-workflow` is invoked from.
 
 Substitution happens before YAML parsing, so parameters can appear in selectors as well:
 
@@ -85,7 +85,7 @@ When `outputs:` is absent, all extracted keys are returned (backwards-compatible
 
 ## Extracting Values into Outputs
 
-Use the `Extract` action to read a value from a UI element. Use `EvalCondition` as the `expect` to verify the extraction actually produced something — `Always` will succeed even if the element was empty:
+Use the `Extract` action to read a value from a UI element. Use `EvalCondition` as the `expect` to verify the extraction actually produced something (`Always` will succeed even if the element was empty):
 
 ```yaml
 - intent: read the export file path
@@ -130,7 +130,7 @@ Once written, an output key is available as `{output.key}` in all subsequent ste
 
 ## Passing Parameters at Runtime
 
-From the CLI, use `--` to separate the engine's own flags from the workflow parameters. Everything after `--` is passed through to the workflow rather than being interpreted by the engine — the same convention used by Cargo and many Unix tools:
+From the CLI, use `--` to separate the engine's own flags from the workflow parameters. Everything after `--` is passed through to the workflow rather than being interpreted by the engine (the same convention used by Cargo and many Unix tools):
 
 ```powershell
 ui-workflow my_workflow.yml -- --search_term quarterly_report --output_dir C:\Reports
