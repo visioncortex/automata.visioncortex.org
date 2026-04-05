@@ -7,7 +7,7 @@ sidebar_label: Recovery Handlers
 
 A workflow is not a flat sequence of steps. It is a hierarchical state machine.
 
-The primary axis is the happy path: the ordered sequence of phases and steps that takes the application from its starting state to the desired outcome. But real applications run in a noisy environment. An unexpected error dialog appears. A background process triggers a notification. A network call stalls and a progress indicator stays up longer than expected. These are orthogonal states — they arrive independently of what the workflow is doing, on a different axis entirely.
+The primary axis is the happy path: the ordered sequence of phases and steps that takes the application from its starting state to the desired outcome. But real applications run in a noisy environment. An unexpected error dialog appears. A background process triggers a notification. A network call stalls and a progress indicator stays up longer than expected. These are orthogonal states: they arrive independently of what the workflow is doing, on a different axis entirely.
 
 Without recovery handlers, the only option is to encode every possible interruption inline, cluttering every step with conditional branches that mostly never fire. Recovery handlers separate these concerns cleanly. The happy path stays linear; the orthogonal cases are declared once, activated per-phase, and fire only when they are needed.
 
@@ -34,7 +34,7 @@ Each handler has three fields:
 
 | Field | Description |
 |---|---|
-| `trigger` | Any [Condition](../conditions) — checked after a step timeout |
+| `trigger` | Any [Condition](../conditions), checked after a step timeout |
 | `actions` | List of [Actions](../actions) to execute when the trigger fires |
 | `resume` | What the executor does after the actions complete |
 
@@ -141,7 +141,7 @@ recovery_handlers:
 
 **Handle a disabled button that becomes enabled after a delay:**
 
-When the button is disabled, `ElementEnabled` will not be true yet. Use `retry: with_recovery` with a long timeout instead of a handler — let the polling loop handle it. Handlers are for unexpected state changes, not timing.
+When the button is disabled, `ElementEnabled` will not be true yet. Use `retry: with_recovery` with a long timeout instead of a handler and let the polling loop handle it. Handlers are for unexpected state changes, not timing.
 
 **Recover from focus loss:**
 

@@ -39,7 +39,7 @@ If no dialog is present when `close_dialog` is reached, the phase is skipped cle
 
 ### Step preconditions
 
-Individual steps can also declare a `precondition`. If false, the step is skipped and execution continues with the next step in the same phase — not an error.
+Individual steps can also declare a `precondition`. If false, the step is skipped and execution continues with the next step in the same phase (not an error).
 
 ```yaml
 - intent: dismiss warning dialog if present
@@ -108,7 +108,7 @@ Combining `Eval` variables, `EvalCondition`, and phase jumps gives you a full lo
 └─────────┘  loop back
 ```
 
-Here is a complete example — `notepad_loop_counter` — which counts from 1 to 10, types each number into Notepad, accumulates a running total, and writes the final sum:
+Here is a complete example (`notepad_loop_counter`) which counts from 1 to 10, types each number into Notepad, accumulates a running total, and writes the final sum:
 
 ```yaml
 phases:
@@ -184,7 +184,7 @@ Notepad ends up with:
 Sum: 55
 ```
 
-Phase jumps, mutable variables, and conditional branching together make the workflow language Turing complete. Anything you can express in a structured programming language — loops, counters, accumulators, conditional branches — you can express in a workflow.
+Phase jumps, mutable variables, and conditional branching together make the workflow language Turing complete. Anything you can express in a structured programming language (loops, counters, accumulators, conditional branches) you can express in a workflow.
 
 ## Early Exit
 
@@ -213,4 +213,4 @@ A phase named `finally` runs unconditionally at the end of a workflow, whether i
       expect: { type: Always }
 ```
 
-`finally` runs even if a previous phase failed — making it the right place for any cleanup that must always happen.
+`finally` runs even if a previous phase failed, making it the right place for any cleanup that must always happen.

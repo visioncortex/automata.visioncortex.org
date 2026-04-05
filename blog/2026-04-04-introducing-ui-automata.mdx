@@ -39,14 +39,14 @@ UI Automata takes a complementary approach: use the semantic layer that is alrea
 Think of a workflow YAML file as the shell script for the Windows desktop. Where a shell script says "run this command, check the exit code, pipe the output to the next step" — a workflow YAML says "click this button, wait for this dialog, extract this value."
 
 ```yaml
-- intent: click the Save button
+- intent: click the Save menu item
   action:
     type: Click
-    scope: main_window
-    selector: ">> [role=button][name=Save]"
+    scope: notepad
+    selector: ">> [role=menu item][name=Save]"
   expect:
     type: DialogPresent
-    scope: main_window
+    scope: notepad
   timeout: 10s
 ```
 

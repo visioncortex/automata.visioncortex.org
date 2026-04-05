@@ -5,7 +5,7 @@ sidebar_label: Expressions
 
 # Expressions
 
-Workflows have two distinct mechanisms for working with values at runtime. Understanding which one to use — and why they are separate — avoids confusion.
+Workflows have two distinct mechanisms for working with values at runtime. Understanding which one to use (and why they are separate) avoids confusion.
 
 ## Two Mechanisms
 
@@ -54,7 +54,7 @@ Here `size` is a bare identifier that resolves from the locals/output buffer. No
 
 The evaluator has three types: **String**, **Number** (64-bit float), and **Bool**.
 
-All variables arrive as `String` — values from `Extract`, params, and locals are always stored as strings. The evaluator promotes them to `Number` when the context requires it and when the string parses as a valid number. `Bool` is never promoted or demoted automatically.
+All variables arrive as `String`: values from `Extract`, params, and locals are always stored as strings. The evaluator promotes them to `Number` when the context requires it and when the string parses as a valid number. `Bool` is never promoted or demoted automatically.
 
 If you have written bash, this should feel familiar. In bash, `$count` is always a string; arithmetic context (`$(( ))` or `-gt`/`-lt`) promotes it to a number automatically:
 
@@ -75,7 +75,7 @@ output.status == 'done'        # string comparison
 output.count > 0 && output.status == 'done'
 ```
 
-The key difference from bash: `Bool` is an explicit type. In bash, any non-empty string is truthy and you can write `[[ "$x" && "$y" ]]`. Here, `&&` requires its operands to actually be `Bool` — produced by a comparison — not just any non-empty value. Type errors are explicit rather than silently wrong.
+The key difference from bash: `Bool` is an explicit type. In bash, any non-empty string is truthy and you can write `[[ "$x" && "$y" ]]`. Here, `&&` requires its operands to actually be `Bool` (produced by a comparison), not just any non-empty value. Type errors are explicit rather than silently wrong.
 
 | Concept | bash | Automata expression |
 |---|---|---|
@@ -85,9 +85,9 @@ The key difference from bash: `Bool` is an explicit type. In bash, any non-empty
 | Numeric comparison | `[[ "$count" -gt 0 ]]` | `count > 0` |
 | String comparison | `[[ "$status" == "done" ]]` | `output.status == 'done'` |
 | Equality | `-eq` (numeric) / `==` (string) | `==` and `!=` (type inferred from operands) |
-| Boolean AND | `[[ ... && ... ]]` | `... && ...` — operands **must** be `Bool` |
-| Boolean OR | <code>[[ ... &#124;&#124; ... ]]</code> | <code>... &#124;&#124; ...</code> — operands **must** be `Bool` |
-| Implicit truthiness | `[[ "$x" ]]` (non-empty) | not supported — use `output.x != ''` |
+| Boolean AND | `[[ ... && ... ]]` | `... && ...` (operands **must** be `Bool`) |
+| Boolean OR | <code>[[ ... &#124;&#124; ... ]]</code> | <code>... &#124;&#124; ...</code> (operands **must** be `Bool`) |
+| Implicit truthiness | `[[ "$x" ]]` (non-empty) | not supported; use `output.x != ''` |
 | String literal | `"hello"` | `'hello'` (single quotes only) |
 | String length | `${#var}` | `strlen(var)` |
 | Math functions | `bc`, `awk` | `round()`, `floor()`, `ceil()`, `min()`, `max()` |
@@ -108,7 +108,7 @@ output.count + 1     # "10" + 1 → 11 (Number)
 
 The coercion rule can surprise you: `'3' + 4` evaluates to `7` (Number), not `"34"`, because the string `'3'` parses as a number. Use explicit string prefixes to force concatenation when you mean it.
 
-For building file paths, prefer `path_join` over manual concatenation — it handles separators correctly.
+For building file paths, prefer `path_join` over manual concatenation: it handles separators correctly.
 
 ### Comparison Operators
 
@@ -128,7 +128,7 @@ output.count > 'abc'     # error: operator `>` requires a number
 
 ### Boolean Operators
 
-`&&` and `||` require both operands to be `Bool`. There is no implicit truthiness — you cannot write `output.value && something`. You must produce a `Bool` first via a comparison:
+`&&` and `||` require both operands to be `Bool`. There is no implicit truthiness: you cannot write `output.value && something`. You must produce a `Bool` first via a comparison:
 
 ```
 output.count > 0 && output.status == 'ok'   # correct
@@ -161,8 +161,8 @@ From highest to lowest:
 | 3 | `*` `/` `%` |
 | 4 | `+` `-` |
 | 5 | `==` `!=` `<` `<=` `>` `>=` → always return `Bool` |
-| 6 | `&&` — both operands must be `Bool` |
-| 7 | <code>&#124;&#124;</code> — both operands must be `Bool` |
+| 6 | `&&` (both operands must be `Bool`) |
+| 7 | <code>&#124;&#124;</code> (both operands must be `Bool`) |
 
 
 ## Built-In Functions
@@ -187,13 +187,13 @@ From highest to lowest:
 | `regex_match(s, pattern)` | Returns `true` if `pattern` matches anywhere in `s` |
 | `regex_extract(s, pattern)` | Returns the first capture group if present, otherwise the full match; returns empty string if no match |
 
-Both regex functions use [fancy-regex](https://github.com/fancy-regex/fancy-regex) — the same engine as `ElementHasText` patterns — supporting backreferences and lookahead.
+Both regex functions use [fancy-regex](https://github.com/fancy-regex/fancy-regex) (the same engine as `ElementHasText` patterns), supporting backreferences and lookahead.
 
 ### Output Buffer
 
 | Function | Description |
 |---|---|
-| `output_count('key')` | Number of values stored under `key` — useful after `Extract` with `multiple: true` |
+| `output_count('key')` | Number of values stored under `key`; useful after `Extract` with `multiple: true` |
 
 ### Path Manipulation
 

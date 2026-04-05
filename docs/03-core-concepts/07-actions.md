@@ -53,7 +53,7 @@ Sends a key or key chord. Accepts virtual key names (`{ENTER}`, `{TAB}`, `{F5}`)
 
 ### Invoke
 
-Calls UIA's `IInvokePattern::Invoke()` on the matched element — no mouse click, no bounding rect required. Use this instead of `Click` for elements that are scrolled out of view, which report a degenerate bounding box of `(0, 0, 1, 1)` and will cause `Click` to fail.
+Calls UIA's `IInvokePattern::Invoke()` on the matched element (no mouse click, no bounding rect required). Use this instead of `Click` for elements that are scrolled out of view, which report a degenerate bounding box of `(0, 0, 1, 1)` and will cause `Click` to fail.
 
 ```yaml
 - intent: navigate to About
@@ -68,7 +68,7 @@ Calls UIA's `IInvokePattern::Invoke()` on the matched element — no mouse click
 ```
 
 :::caution
-Do not use `ScrollIntoView` for items in WinUI / UWP scrollable lists — it uses mouse-wheel events that trigger elastic scroll and the list snaps back. Use `Invoke` instead.
+Do not use `ScrollIntoView` for items in WinUI / UWP scrollable lists: it uses mouse-wheel events that trigger elastic scroll and the list snaps back. Use `Invoke` instead.
 :::
 
 ### DismissDialog
@@ -133,7 +133,7 @@ Navigates a browser tab to a URL. Requires a `Tab` anchor as `scope`.
   timeout: 30s
 ```
 
-`BrowserNavigate` blocks until `document.readyState === 'complete'` before returning — the page is fully loaded before the `expect` condition is evaluated. Use `TabWithAttribute` to additionally confirm the tab title matches the expected page, as a guard against redirects or error pages.
+`BrowserNavigate` blocks until `document.readyState === 'complete'` before returning, so the page is fully loaded before the `expect` condition is evaluated. Use `TabWithAttribute` to additionally confirm the tab title matches the expected page, as a guard against redirects or error pages.
 
 ### BrowserEval
 

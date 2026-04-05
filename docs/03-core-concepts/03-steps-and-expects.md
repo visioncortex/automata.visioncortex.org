@@ -42,7 +42,7 @@ Required. A human-readable label shown in logs, progress events, and error messa
 
 ### `precondition`
 
-Optional. Evaluated before the action. If false, the step is **skipped** — not an error. Use this for conditional steps:
+Optional. Evaluated before the action. If false, the step is **skipped** (not an error). Use this for conditional steps:
 
 ```yaml
 - intent: dismiss warning dialog if present
@@ -94,7 +94,7 @@ Controls what happens when `expect` times out (after any `fallback`):
 
 | Value | Behaviour |
 |---|---|
-| `none` | No retries — the step fails immediately when `expect` times out |
+| `none` | No retries: the step fails immediately when `expect` times out |
 | `fixed: { count: N, delay: Xms }` | Re-execute the action up to N additional times, waiting `delay` between attempts |
 
 ```yaml
