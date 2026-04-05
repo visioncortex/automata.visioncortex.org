@@ -66,3 +66,15 @@
   opacity: 0.75;
   margin-bottom: 2rem;
 }
+
+@media screen and (max-width: 480px) {
+  .homepageTitle {
+    font-size: 3rem;
+  }
+
+  .buttons :global(.button) {
+    font-size: 1rem;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
