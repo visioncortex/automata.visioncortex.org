@@ -16,7 +16,7 @@ const FeatureList = [
     video: '/video/notepad-demo.mp4',
   },
   {
-    title: 'Universal Coverage',
+    title: 'Cross-Framework Coverage',
     icon: <MdVisibility size={26} />,
     description: (
       <>
