@@ -1,0 +1,92 @@
+---
+slug: deterministic-workflow
+title: "Making Windows Desktop Automation Deterministic"
+author: Chris Tsang
+author_title: visioncortex
+author_url: https://github.com/tyt2y3
+author_image_url: https://avatars.githubusercontent.com/u/1782664?v=4
+tags: [news]
+---
+
+[UI Automata](https://github.com/visioncortex/ui-automata) is a workflow engine + MCP server that makes Windows desktop automation fast and deterministic. The key shift: going from "screenshot the screen at runtime and hope the vision model figures it out" to "authored workflows you can inspect, run, and debug."
+
+<video controls width="100%" style={{borderRadius: '8px', marginBottom: '2rem'}}>
+  <source src="/video/mastercam-demo.mp4" type="video/mp4" />
+</video>
+
+<!-- truncate -->
+
+## The problem we ran into
+
+We spent a year automating industrial desktop software (CAD tools, ERP systems, simulation suites) and none of the existing approaches held up. These are applications with:
+
+- Deep, heavily nested UI trees
+- Toolbar buttons with no accessible names, identifiable only by hierarchy (parent and sibling)
+- Virtualised lists where off-screen items are invisible to coordinate-based tools
+- Complex workflows spanning multiple processes and windows
+
+We needed something that actually understood the structure of what was on screen, in the app and on the desktop.
+
+## Why computer use tools did not work for us
+
+There are tools like Claude Computer Use and Cowork which we tried, but:
+
+1. **Slow.** They rely on vision inference at runtime: every step is a round-trip to a cloud API when it could be a local UIA query.
+2. **Expensive.** Every step consumes inference tokens regardless of how many times you run the same workflow.
+3. **Non-deterministic.** The same UI state does not always produce the same click, which makes testing and debugging hard.
+4. **No structured trace.** When something goes wrong you have a sequence of screenshots and no record of which element was targeted, what state was expected, or why it failed.
+
+We wanted a way to reliably build and maintain desktop automations in messy, high-stakes environments without depending on runtime vision.
+
+## How UI Automata is different
+
+UI Automata uses **Windows UI Automation** (the accessibility layer built into Windows since Vista). Every interactive element in every UIA-compliant application (Win32, WPF, UWP, WinUI 3) exposes its role, accessible name, and AutomationId. Rather than asking a vision model where the Save button is, we ask Windows directly. Element handles are cached and HWND-locked on first resolution so repeated lookups are nearly instant. Selectors survive window moves, DPI changes, and most app updates.
+
+Workflows are **YAML files** you can read, diff, and version-control:
+
+```yaml
+- intent: click the Open button
+  action:
+    type: Click
+    scope: quickaccess
+    selector: ">> [role='split button'][name=Open]"
+  expect:
+    type: DialogPresent
+    scope: mastercam
+```
+
+Each step declares an action and a postcondition. The engine polls every 100ms until satisfied and bails cleanly on timeout. No sleeps. No guessing. No silent failures.
+
+Selectors use a CSS-like syntax (familiar if you have written CSS):
+
+```python
+>> [role=button][name=Save]                    # role AND name
+>> [id=TabListView] > [role=tab item]:first    # first tab in a specific list
+>> [role=button][name=Settings]:parent         # the container holding this button
+>> [role=dialog][name='Confirm Save As'] >> [role=button][name=Yes]  # button inside a specific dialog
+```
+
+**Recovery handlers** let you declare known bad states (unexpected dialogs, error boxes) separately from the happy path, so the main workflow stays linear and clean. **Subflows** let you compose complex automations from smaller, independently testable pieces.
+
+## For AI agents
+
+The MCP server (`automata-agent`) gives AI agents a full interface to the Windows desktop:
+
+- `desktop`: inspect live element trees, test selectors against any window
+- `app`: list installed applications and launch them
+- `workflow`: run a workflow file, receive structured output
+- `vision`: on-device vision for apps with limited UIA support
+
+Agents can explore an unfamiliar UI, author steps interactively, and promote them into reusable workflow files, entirely within a conversation. Structured automation and vision run in the same agent loop, each used where it fits best.
+
+## What we are releasing
+
+Project at [visioncortex/ui-automata](https://github.com/visioncortex/ui-automata). The release includes:
+
+- The workflow engine and YAML format
+- The MCP server (`automata-agent`) for Claude Code and Claude Desktop
+- `ui-inspector` and other CLI tools for interactive UI exploration
+- A [workflow library](https://automata.visioncortex.org/docs/workflow-library/overview/) with reusable workflows for common Windows applications
+- [Full documentation](https://automata.visioncortex.org/docs/introduction/what-is-ui-automata/)
+
+Would love to hear what Windows tasks you have been unable to automate, and what applications you would want to see covered first.

@@ -103,7 +103,7 @@ The MCP interface gives an agent everything it needs:
 - `app`: list installed applications and launch them
 - `browser`: CDP page inspection and navigation
 - `workflow`: run a workflow file, receive structured output
-- `vision`: OCR and layout for windows that lack UIA support
+- `vision`: on-device vision for apps with limited UIA support
 - Schema and linter: validate workflow files before execution, so agents catch errors without running
 
 An agent can explore an unfamiliar UI, author steps interactively, run them immediately, and promote working steps into a reusable workflow file. The entire loop (explore, script, run, verify) happens in a conversation. No human needed to laboriously demonstrate every step.
